@@ -62,10 +62,6 @@ namespace subt
     /// \return A mutator to the team.
     public: subt::TeamMembershipPtr Team();
 
-    /// \brief Send a message to each member
-    /// with its updated neighbors list.
-    public: void NotifyNeighbors();
-
     /// \brief Dispatch all incoming messages.
     /// \param[in] _maxDataRatePerCycle
     /// \param[in] _udpOverhead
@@ -138,9 +134,6 @@ namespace subt
 
     /// \brief An Ignition Transport node for communications.
     private: ignition::transport::Node node;
-
-    /// \brief The publisher for notifying neighbor updates.
-    private: ignition::transport::Node::Publisher neighborPub;
 
     /// \brief Random engine used to shuffle the messages.
     private: std::default_random_engine rndEngine;

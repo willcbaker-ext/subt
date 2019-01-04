@@ -66,16 +66,6 @@ Broker::Broker()
     std::cerr << "Error advertising srv [" << kBrokerSrv << "]" << std::endl;
     return;
   }
-
-  // Advertise a topic for notifying neighbor updates.
-  this->neighborPub =
-    this->node.Advertise<subt::msgs::Neighbor_M>(kNeighborsTopic);
-  if (!this->neighborPub)
-  {
-    std::cerr << "Error advertising topic [" << kNeighborsTopic << "]"
-              << std::endl;
-    return;
-  }
 }
 
 //////////////////////////////////////////////////
@@ -90,31 +80,6 @@ void Broker::Reset()
 subt::TeamMembershipPtr Broker::Team()
 {
   return this->team;
-}
-
-//////////////////////////////////////////////////
-void Broker::NotifyNeighbors()
-{
-  subt::msgs::Neighbor_M neighbors;
-
-  // Send neighbors updates to each member of the team.
-  for (auto const &robot : (*this->Team()))
-  {
-    auto address = robot.first;
-    auto teamMember = (*this->Team())[address];
-
-    // Populate the list of neighbors for this address.
-    ignition::msgs::StringMsg_V v;
-    for (auto const &neighbor : teamMember->neighbors)
-      v.add_data(neighbor.first);
-
-    // Add the list of neighbors for each address.
-    (*neighbors.mutable_neighbors())[address] = v;
-  }
-
-  // Notify all clients the updated list of neighbors.
-  if (!this->neighborPub.Publish(neighbors))
-    std::cerr << "[Broker::NotifyNeighbors(): Error on update" << std::endl;
 }
 
 //////////////////////////////////////////////////

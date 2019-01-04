@@ -81,9 +81,6 @@ void CommsBrokerPlugin::OnUpdate()
   // Update the state of the communication model.
   this->commsModel->Update();
 
-  // Send a message to each team member with its updated neighbors list.
-  this->broker.NotifyNeighbors();
-
   // Dispatch all the incoming messages, deciding whether the destination gets
   // the message according to the communication model.
   this->broker.DispatchMessages(maxDataRate, this->commsModel->UdpOverhead());

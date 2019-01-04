@@ -20,6 +20,9 @@
 
 #include <memory>
 #include <string>
+#include <utility>
+#include <vector>
+#include <gazebo/common/Events.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Model.hh>
 #include <ignition/transport/Node.hh>
@@ -48,11 +51,25 @@ namespace subt
                             const uint32_t _dstPort,
                             const std::string &_data);
 
+    /// \brief Used to send ACKs when needed.
+    private: void OnUpdate();
+
     /// \brief An ignition transport node.
     private: ignition::transport::Node node;
 
     /// \brief SubT communication client.
     private: std::unique_ptr<subt::CommsClient> client;
+
+    /// \brief The world update connection.
+    private: gazebo::event::ConnectionPtr worldUpdateConn;
+
+    /// \brief Vector of addresses to acknowledge.
+    /// The first element of the pair is the address.
+    /// The second element of the pair is the port.
+    private: std::vector<std::pair<std::string, uint32_t>> acks;
+
+    /// \brief A mutex.
+    private: std::mutex mutex;
   };
 }
 #endif

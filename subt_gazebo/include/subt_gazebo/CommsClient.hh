@@ -239,11 +239,6 @@ namespace subt
     /// restrictions than SendTo().
     public: bool SendToBaseStation(const subt::msgs::Artifact &_artifact);
 
-    /// \brief Get the list of local neighbors.
-    ///
-    /// \return A vector of addresses from your local neighbors.
-    public: std::vector<std::string> Neighbors() const;
-
     /// \brief Register the current address. This will make a synchronous call
     /// to the broker to validate and register the address.
     /// \return True when the address is valid or false otherwise.
@@ -257,14 +252,6 @@ namespace subt
     /// \brief Function called each time a new datagram message is received.
     /// \param[in] _msg The incoming message.
     private: void OnMessage(const msgs::Datagram &_msg);
-
-    /// \brief Callback executed each time that a neighbor update is received.
-    /// The updates are coming from the broker. The broker decides which are
-    /// the robots inside the communication range of each other vehicle and
-    /// notifies these updates.
-    ///
-    /// \param[in] _neighbors The list of neighbors.
-    private: void OnNeighbors(const msgs::Neighbor_M &_neighbors);
 
     /// \def Callback_t
     /// \brief The callback specified by the user when new data is available.
@@ -284,9 +271,6 @@ namespace subt
 
     /// \brief Maximum transmission payload size (octets) for each message.
     private: static const uint32_t kMtu = 1500;
-
-    /// \brief The current list of neighbors.
-    private: std::vector<std::string> neighbors;
 
     /// \brief An Ignition Transport node for communications.
     private: ignition::transport::Node node;
