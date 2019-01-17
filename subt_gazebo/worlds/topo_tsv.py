@@ -140,8 +140,8 @@ def print_graph():
 
     args = parse_args(sys.argv)
 
-    if len (args.dot_name) > 0:
-        outfile = open (args.dot_name, 'w')
+    if len(args.dot_name) > 0:
+        outfile = open(args.dot_name, 'w')
         usage = ' --dot-name %s' % args.dot_name
     else:
         outfile = sys.stdout
@@ -159,9 +159,9 @@ def print_graph():
     edge_fmt = '  %d -- %d [label=%d];%s'
 
     # (iy, ix): iv
-    cell_to_iv = dict ()
-    cell_to_mesh = dict ()
-    cell_to_yaw = dict ()
+    cell_to_iv = dict()
+    cell_to_mesh = dict()
+    cell_to_yaw = dict()
 
 
     BASE_MESH = 'base_station'
@@ -224,12 +224,8 @@ graph {
     # Tile the array to n x n, then use vectorized subtraction
     yt = np.tile(y, (len(y), 1))
     xt = np.tile(x, (len(x), 1))
-    #print(yt.shape)
-    #print(yt)
     dy = yt - yt.T
     dx = xt - xt.T
-    #print(dy)
-    #print(dx)
 
     dy = np.triu(dy)
     dx = np.triu(dx)
@@ -244,15 +240,11 @@ graph {
     adjx0 = np.array(dx == 0)
 
     # Test (dy == 1 and dx == 0) or (dy == 0 and dx == 1)
-    #print (np.logical_and (adjy1, adjx0))
-    #print (np.logical_and (adjy0, adjx1))
-    adj_r, adj_c = np.where (np.logical_or (np.logical_and (adjy1, adjx0),
-      np.logical_and (adjy0, adjx1)))
-    #print(adj_r)
-    #print(adj_c)
+    adj_r, adj_c = np.where(np.logical_or(np.logical_and(adjy1, adjx0),
+      np.logical_and(adjy0, adjx1)))
 
     # For each pair of adjacent cells
-    for t1, t2 in zip (adj_r, adj_c):
+    for t1, t2 in zip(adj_r, adj_c):
         # Unique vertex (tile) IDs
         iv1 = cell_to_iv[y[t1], x[t1]]
         iv2 = cell_to_iv[y[t2], x[t2]]
@@ -280,7 +272,7 @@ graph {
             cx = x[t2]
             check_corner = True
         if check_corner:
-            is_connected = GraphRules.check_corner_tile_connection (
+            is_connected = GraphRules.check_corner_tile_connection(
                 cdy, cdx, cell_to_yaw[cy, cx])
 
         # Currently removing blocker from topological graph
@@ -292,7 +284,7 @@ graph {
         # Constraint rule 3: parallel non-intersecting linear tiles aren't nbrs
         if mesh1 in GraphRules.LINEAR_TILES and \
             mesh2 in GraphRules.LINEAR_TILES:
-            is_connected = GraphRules.check_linear_tile_connection (
+            is_connected = GraphRules.check_linear_tile_connection(
                 y[t1], x[t1], cell_to_yaw[y[t1], x[t1]],
                 y[t2], x[t2], cell_to_yaw[y[t2], x[t2]])
 
@@ -306,12 +298,10 @@ graph {
             print ('DEBUG: Ambiguity resolved: tile %s (%d) and %s (%d) not connected' % (
                 mesh1, iv1, mesh2, iv2))
 
-    #print ('%d edges' % adj_r.size)
-
     print('}', file=outfile)
 
-    if len (args.dot_name) > 0:
-        outfile.close ()
+    if len(args.dot_name) > 0:
+        outfile.close()
 
 
 if __name__ == '__main__':
