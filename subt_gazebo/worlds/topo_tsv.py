@@ -3,6 +3,7 @@
 import argparse
 import sys
 import csv
+import os
 import numpy as np
 
 
@@ -127,9 +128,18 @@ class GraphRules:
         return True
 
 
+def usage():
+    return 'Generate topological dot file from tsv.'
+
+
+def print_usage():
+    print('usage: %s' % usage())
+    print('python3 %s [-h] [--dot-name DOT_NAME] tsv_name' % __file__)
+
+
 def parse_args(argv):
-    parser = argparse.ArgumentParser('Generate topological dot file from tsv.')
-    parser.add_argument('file_name', help='name of tsv file to read')
+    parser = argparse.ArgumentParser(usage())
+    parser.add_argument('tsv_name', help='name of tsv file to read')
     parser.add_argument('--dot-name', dest='dot_name', type=str, default='',
         help='name of dot file to output')
     args = parser.parse_args()
@@ -139,6 +149,10 @@ def parse_args(argv):
 def print_graph():
 
     args = parse_args(sys.argv)
+
+    if not os.path.exists(args.tsv_name):
+        print ('Error: Input file does not exist: %s' % args.tsv_name)
+        return
 
     if len(args.dot_name) > 0:
         outfile = open(args.dot_name, 'w')
@@ -150,7 +164,7 @@ def print_graph():
     print('''/* Visibility graph for %s
    Generated with the %s script:
      python3 %s %s%s */''' % (
-        args.file_name, __file__, __file__, args.file_name, usage),
+        args.tsv_name, __file__, __file__, args.tsv_name, usage),
         file=outfile)
 
     # vert_id, vert_id, tile_type, vert_id
@@ -178,7 +192,7 @@ graph {
     print('', file=outfile)
     iv += 1
 
-    with open(args.file_name, 'r') as tsvfile:
+    with open(args.tsv_name, 'r') as tsvfile:
         spamreader = csv.reader(tsvfile, delimiter='\t')
         for iy, row in enumerate(spamreader):
             for ix, cell in enumerate(row):
@@ -305,4 +319,7 @@ graph {
 
 
 if __name__ == '__main__':
-    print_graph()
+    if len(sys.argv) == 1:
+        print_usage()
+    else:
+        print_graph()
