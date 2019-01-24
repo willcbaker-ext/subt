@@ -129,17 +129,8 @@ class GraphRules:
         return True
 
 
-def usage():
-    return 'Generate topological dot file from tsv.'
-
-
-def print_usage():
-    print('usage: %s' % usage())
-    print('python3 %s [-h] [--dot-name DOT_NAME] tsv_name' % __file__)
-
-
 def parse_args(argv):
-    parser = argparse.ArgumentParser(usage())
+    parser = argparse.ArgumentParser('Generate topological dot file from tsv.')
     parser.add_argument('tsv_name', help='name of tsv file to read')
     parser.add_argument('--dot-name', dest='dot_name', type=str, default='',
         help='name of dot file to output')
@@ -320,7 +311,4 @@ graph {
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 1:
-        print_usage()
-    else:
-        print_graph()
+    print_graph()
