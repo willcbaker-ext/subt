@@ -6,7 +6,7 @@ graph {
   /* ==== Vertices ==== */
 
   /* Base station / Staging area */
-  0 [label="0::base_station::tile_0"];
+  0 [label="0::base_station::BaseStation"];
 
   1 [label="1::tunnel_tile_2::tile_1"];
   2 [label="2::tunnel_tile_5::tile_2"];

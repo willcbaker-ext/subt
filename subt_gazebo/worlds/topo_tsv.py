@@ -186,8 +186,8 @@ graph {
 
     # First vertex is base station, not in tsv
     iv = 0
-    #print(vert_fmt_base % (iv, iv, BASE_MESH), file=outfile)
-    print(vert_fmt % (iv, iv, BASE_MESH, iv), file=outfile)
+    print(vert_fmt_base % (iv, iv, BASE_MESH), file=outfile)
+    #print(vert_fmt % (iv, iv, BASE_MESH, iv), file=outfile)
     print('', file=outfile)
     iv += 1
 
