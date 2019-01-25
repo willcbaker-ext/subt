@@ -155,11 +155,12 @@ def print_graph():
 
     print('''/* Visibility graph for %s
    Generated with the %s script:
-     python3 %s %s%s */''' % (
+     python %s %s%s */''' % (
         args.tsv_name, __file__, __file__, args.tsv_name, usage),
         file=outfile)
 
     # vert_id, vert_id, tile_type, vert_id
+    vert_fmt_base = '  %d [label="%d::%s::BaseStation"];'
     vert_fmt = '  %d [label="%d::%s::tile_%d"];'
     # vert1_id, vert2_id, edge_cost
     edge_fmt = '  %d -- %d [label=%d];%s'
@@ -168,6 +169,11 @@ def print_graph():
     cell_to_iv = dict()
     cell_to_mesh = dict()
     cell_to_yaw = dict()
+
+    # Keep a sorted list of vertex indices. This makes output prettier.
+    #   Not needed in python3 - dictionary keys are sorted.
+    # [(iy, ix), ...]
+    iyx = []
 
 
     BASE_MESH = 'base_station'
@@ -180,6 +186,7 @@ graph {
 
     # First vertex is base station, not in tsv
     iv = 0
+    #print(vert_fmt_base % (iv, iv, BASE_MESH), file=outfile)
     print(vert_fmt % (iv, iv, BASE_MESH, iv), file=outfile)
     print('', file=outfile)
     iv += 1
@@ -198,6 +205,8 @@ graph {
                         if modelType not in GraphRules.artifacts:
                             print(vert_fmt % (iv, iv, modelType, iv),
                                 file=outfile)
+
+                            iyx.append ((iy, ix))
 
                             # Yaw resolves ambiguous connected vertices
                             cell_to_yaw[(iy, ix)] = yawDegrees
@@ -221,17 +230,16 @@ graph {
     print(edge_fmt % (0, iv_start_tile, GraphRules.calc_edge_cost(BASE_MESH,
         iv_start_type), ''), file=outfile)
 
-    # Adjacency list
-    # Key: (y, x). Value: [(y, x), ...]
-    nbrs = dict()
-
-    y, x = zip(*cell_to_iv.keys())
+    # This suffices for python3, only matters for pretty formatting
+    #y, x = zip(*cell_to_iv.keys())
+    # Get manually sorted list for Python2
+    y, x = zip(*iyx)
 
     # Tile the array to n x n, then use vectorized subtraction
     yt = np.tile(y, (len(y), 1))
     xt = np.tile(x, (len(x), 1))
-    dy = yt - yt.T
-    dx = xt - xt.T
+    dy = np.abs (yt - yt.T)
+    dx = np.abs (xt - xt.T)
 
     dy = np.triu(dy)
     dx = np.triu(dx)
@@ -301,7 +309,7 @@ graph {
             print(edge_fmt % (iv1, iv2, GraphRules.calc_edge_cost(mesh1, mesh2),
               cmt), file=outfile)
         else:
-            print ('DEBUG: Ambiguity resolved: tile %s (%d) and %s (%d) not connected' % (
+            print('DEBUG: Ambiguity resolved: tile %s (%d) and %s (%d) not connected' % (
                 mesh1, iv1, mesh2, iv2))
 
     print('}', file=outfile)
