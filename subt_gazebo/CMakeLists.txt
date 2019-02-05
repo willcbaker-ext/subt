@@ -30,6 +30,8 @@ find_package(ignition-common1 REQUIRED)
 find_package(ignition-math4 REQUIRED)
 find_package(ignition-msgs1 REQUIRED)
 find_package(ignition-transport4 REQUIRED)
+find_package(ignition-plugin1 REQUIRED COMPONENTS loader register)
+find_package(ignition-launch REQUIRED)
 
 ########################
 ## Message generation ##
@@ -120,6 +122,24 @@ target_link_libraries(${game_logic_plugin_name}
   ${protobuf_lib_name}
 )
 install(TARGETS ${game_logic_plugin_name}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+
+# Create the libGameLogicPluginIgn.so library.
+set(game_logic_plugin_ign_name GameLogicPluginIgn)
+add_library(${game_logic_plugin_ign_name} src/GameLogicPluginIgn.cc)
+# add_dependencies(${game_logic_plugin_name} subt_msgs_generate_messages_cpp)
+target_include_directories(${game_logic_plugin_ign_name}
+  PRIVATE ${CATKIN_DEVEL_PREFIX}/include)
+target_link_libraries(${game_logic_plugin_ign_name}
+  PRIVATE
+    ignition-plugin1::loader
+    ignition-math6::core
+    ignition-launch::core
+  # ${protobuf_lib_name}
+)
+install(TARGETS ${game_logic_plugin_ign_name}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
