@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ignition version='1.0'>
+
+  <!-- TODO(nkoenig) implement args that can be used throughout the ign file
+       For example in the gazebo run command and the game logic plugin
+  <arg world ></arg>
+  -->
+
+  <!-- Start ROS first -->
+  <!-- Make sure to source /opt/ros/melodic/setup.bash -->
+  <executable name='ros'>
+    <command>roscore</command>
+  </executable>
+
+  <executable name='gazebo-server'>
+    <env>
+      <name>IGN_GAZEBO_RESOURCE_PATH</name>
+      <value>/home/nkoenig/subt_ws/src/subt/subt_gazebo/worlds</value>
+    </env>
+    <command>ign-gazebo -r -v 2 -f tunnel_qual_ign.sdf</command>
+  </executable>
+
+  <!-- The SubT challenge logic plugin -->
+  <plugin name="subt::GameLogicPlugin" filename="libGameLogicPluginIgn.so">
+    <!-- The collection of artifacts to locate -->
+
+    <world_name>tunnel_qual</world_name>
+
+    <artifact>
+      <name>radio_1</name>
+      <type>TYPE_RADIO</type>
+    </artifact>
+    <artifact>
+      <name>backpack_1</name>
+      <type>TYPE_BACKPACK</type>
+    </artifact>
+    <artifact>
+      <name>phone_1</name>
+      <type>TYPE_PHONE</type>
+    </artifact>
+    <artifact>
+      <name>toolbox_1</name>
+      <type>TYPE_TOOLBOX</type>
+    </artifact>
+    <artifact>
+      <name>extinguisher_1</name>
+      <type>TYPE_EXTINGUISHER</type>
+    </artifact>
+    <artifact>
+      <name>radio_2</name>
+      <type>TYPE_RADIO</type>
+    </artifact>
+    <artifact>
+      <name>toolbox_2</name>
+      <type>TYPE_TOOLBOX</type>
+    </artifact>
+    <artifact>
+      <name>phone_2</name>
+      <type>TYPE_PHONE</type>
+    </artifact>
+    <artifact>
+      <name>electrical_box_1</name>
+      <type>TYPE_ELECTRICAL_BOX</type>
+    </artifact>
+    <artifact>
+      <name>backpack_2</name>
+      <type>TYPE_BACKPACK</type>
+    </artifact>
+    <artifact>
+      <name>phone_3</name>
+      <type>TYPE_PHONE</type>
+    </artifact>
+    <artifact>
+      <name>valve_1</name>
+      <type>TYPE_VALVE</type>
+    </artifact>
+    <artifact>
+      <name>valve_2</name>
+      <type>TYPE_VALVE</type>
+    </artifact>
+    <artifact>
+      <name>electrical_box_2</name>
+      <type>TYPE_ELECTRICAL_BOX</type>
+    </artifact>
+    <artifact>
+      <name>backpack_3</name>
+      <type>TYPE_BACKPACK</type>
+    </artifact>
+    <artifact>
+      <name>extinguisher_2</name>
+      <type>TYPE_EXTINGUISHER</type>
+    </artifact>
+  </plugin>
+
+</ignition>
