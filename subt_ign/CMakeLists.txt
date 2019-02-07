@@ -285,9 +285,9 @@ install(DIRECTORY ign/
 # install(DIRECTORY models/
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/models)
 # 
-# # Install all the world files
-# install(DIRECTORY worlds/
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/worlds)
+# Install all the world files
+install(DIRECTORY worlds/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/worlds)
 # 
 # install(PROGRAMS
 #   scripts/world_generator
