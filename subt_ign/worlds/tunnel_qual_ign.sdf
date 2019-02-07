@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 
 <sdf version="1.6">
-  <world name="tunnel_qual">
+  <world name="tunnel_qual_ign">
     <plugin
       filename="libignition-gazebo-physics-system.so"
       name="ignition::gazebo::systems::v0::Physics">

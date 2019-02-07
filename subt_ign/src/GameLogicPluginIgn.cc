@@ -25,8 +25,9 @@
 #include <mutex>
 #include <utility>
 
-#include <ignition/common/Util.hh>
 #include <ignition/common/Console.hh>
+#include <ignition/common/Util.hh>
+#include <ignition/common/Time.hh>
 #include <ignition/math/Pose3.hh>
 #include <ignition/msgs/float.pb.h>
 #include <ignition/transport/Node.hh>
@@ -56,6 +57,11 @@ class subt::GameLogicPluginPrivate
           {subt::ArtifactType::TYPE_VALVE         , "TYPE_VALVE"}
         }
       };
+
+  /// \brief Write a simulation timestamp to a logfile.
+  /// \return A file stream that can be used to write additional
+  /// information to the logfile.
+  public: std::ofstream &Log();
 
   // Configure ros functionality
   public: void SetupRos();
@@ -198,6 +204,44 @@ GameLogicPlugin::~GameLogicPlugin()
 //////////////////////////////////////////////////
 void GameLogicPlugin::Load(const tinyxml2::XMLElement *_elem)
 {
+  // Default log path is /dev/null.
+  std::string logPath = "/dev/null";
+
+  // Check if the game logic plugin has a <logging> element.
+  // The <logging> element can contain a <filename_prefix> child element.
+  // The <filename_prefix> is used to specify the log filename prefix. For
+  // example:
+  // <logging>
+  //   <filename_prefix>subt_tunnel_qual</filename_prefix>
+  // </logging>
+  const tinyxml2::XMLElement *loggingElem = _elem->FirstChildElement("logging");
+  const tinyxml2::XMLElement *fileElem = nullptr;
+  if (loggingElem &&
+      (fileElem = loggingElem->FirstChildElement("filename_prefix")))
+  {
+    // Get the log filename prefix.
+    std::string filenamePrefix = fileElem->GetText();
+
+    // Make sure that we can access the HOME environment variable.
+    char *homePath = getenv("HOME");
+    if (!homePath)
+    {
+      ignerr << "Unable to get HOME environment variable. Report this error to "
+        << "https://bitbucket.org/osrf/subt/issues/new. "
+        << "SubT logging will be disabled.\n";
+    }
+    else
+    {
+      // Construct the final log filename.
+      logPath = homePath;
+      logPath += "/" + filenamePrefix + "_" +
+        ignition::common::systemTimeISO() + ".log";
+    }
+  }
+
+  // Open the log file.
+  this->dataPtr->logStream.open(logPath.c_str(), std::ios::out);
+
   this->dataPtr->SetupRos();
 
   // Advertise the service to receive artifact reports.
@@ -272,7 +316,7 @@ void GameLogicPluginPrivate::OnPose(const ignition::msgs::Pose_V &_msg)
 /////////////////////////////////////////////////
 void GameLogicPluginPrivate::OnNewArtifact(const subt::msgs::Artifact &_req)
 {
-  // this->Log() << "new_artifact_reported" << std::endl;
+  this->Log() << "new_artifact_reported" << std::endl;
 
   ArtifactType artifactType;
   if (!this->ArtifactFromInt(_req.type(), artifactType))
@@ -281,9 +325,9 @@ void GameLogicPluginPrivate::OnNewArtifact(const subt::msgs::Artifact &_req)
           << this->kArtifactTypes.size() - 1 << " but we received "
           << _req.type() << std::endl;
 
-    // this->Log() << "error Unknown artifact code. The number should be between "
-    //             << "0 and " << this->kArtifactTypes.size() - 1
-    //             << " but we received " << _req.type() << std::endl;
+    this->Log() << "error Unknown artifact code. The number should be between "
+                << "0 and " << this->kArtifactTypes.size() - 1
+                << " but we received " << _req.type() << std::endl;
     return;
   }
 
@@ -292,7 +336,7 @@ void GameLogicPluginPrivate::OnNewArtifact(const subt::msgs::Artifact &_req)
     this->totalScore += this->ScoreArtifact(
         artifactType, _req.pose());
     ignmsg << "Total score: " << this->totalScore << std::endl;
-    // this->Log() << "new_total_score " << this->totalScore << std::endl;
+    this->Log() << "new_total_score " << this->totalScore << std::endl;
   }
 }
 
@@ -315,7 +359,7 @@ double GameLogicPluginPrivate::ScoreArtifact(const ArtifactType &_type,
   if (!this->started)
   {
     ignmsg << "  The task hasn't started yet" << std::endl;
-    // this->Log() << "task_not_started" << std::endl;
+    this->Log() << "task_not_started" << std::endl;
     return 0.0;
   }
 
@@ -323,7 +367,7 @@ double GameLogicPluginPrivate::ScoreArtifact(const ArtifactType &_type,
   if (this->artifacts.find(_type) == this->artifacts.end())
   {
     ignmsg << "  No artifacts remaining" << std::endl;
-    // this->Log() << "no_remaining_artifacts_of_specified_type" << std::endl;
+    this->Log() << "no_remaining_artifacts_of_specified_type" << std::endl;
     return 0.0;
   }
 
@@ -367,7 +411,7 @@ double GameLogicPluginPrivate::ScoreArtifact(const ArtifactType &_type,
   }
 
   ignmsg << "  [Total]: " << score << std::endl;
-  // this->Log() << "modified_score " << score << std::endl;
+  this->Log() << "modified_score " << score << std::endl;
 
   return score;
 }
@@ -406,8 +450,8 @@ void GameLogicPluginPrivate::ParseArtifacts(const tinyxml2::XMLElement *_elem)
     {
       ignerr << "[GameLogicPlugin]: Parameter <name> not found. Ignoring this "
             << "artifact" << std::endl;
-      // this->Log() << "error Parameter <name> not found. Ignoring this artifact"
-      //            << std::endl;
+      this->Log() << "error Parameter <name> not found. Ignoring this artifact"
+                  << std::endl;
       artifactElem = artifactElem->NextSiblingElement("artifact");
       continue;
     }
@@ -420,8 +464,8 @@ void GameLogicPluginPrivate::ParseArtifacts(const tinyxml2::XMLElement *_elem)
     {
       ignerr << "[GameLogicPlugin]: Parameter <type> not found. Ignoring this "
         << "artifact" << std::endl;
-      //this->Log() << "error Parameter <type> not found. Ignoring this artifact"
-      //            << std::endl;
+      this->Log() << "error Parameter <type> not found. Ignoring this artifact"
+                  << std::endl;
 
       artifactElem = artifactElem->NextSiblingElement("artifact");
       continue;
@@ -434,8 +478,8 @@ void GameLogicPluginPrivate::ParseArtifacts(const tinyxml2::XMLElement *_elem)
     {
       ignerr << "[GameLogicPlugin]: Unknown artifact type ["
         << modelTypeStr << "]. Ignoring artifact" << std::endl;
-      // this->Log() << "error Unknown artifact type ["
-      //            << modelTypeStr << "]. Ignoring artifact" << std::endl;
+      this->Log() << "error Unknown artifact type ["
+                  << modelTypeStr << "]. Ignoring artifact" << std::endl;
       artifactElem = artifactElem->NextSiblingElement("artifact");
       continue;
     }
@@ -450,8 +494,8 @@ void GameLogicPluginPrivate::ParseArtifacts(const tinyxml2::XMLElement *_elem)
       {
         ignerr << "[GameLogicPlugin]: Repeated model with name ["
           << modelName << "]. Ignoring artifact" << std::endl;
-        // this->Log() << "error Repeated model with name ["
-        //             << modelName << "]. Ignoring artifact" << std::endl;
+        this->Log() << "error Repeated model with name ["
+                    << modelName << "]. Ignoring artifact" << std::endl;
         artifactElem = artifactElem->NextSiblingElement("artifact");
         continue;
       }
@@ -540,11 +584,11 @@ void GameLogicPluginPrivate::Finish()
     ignmsg << "Scoring has finished. Elapsed time: "
           << std::chrono::duration_cast<std::chrono::seconds>(elapsed).count()
           << " seconds" << std::endl;
-    // this->Log() << "finished_elapsed_time "
-    //   << std::chrono::duration_cast<std::chrono::seconds>(elapsed).count()
-    //   << " s." << std::endl;
-    // this->Log() << "finished_score " << this->totalScore << std::endl;
-    // this->logStream.flush();
+    this->Log() << "finished_elapsed_time "
+      << std::chrono::duration_cast<std::chrono::seconds>(elapsed).count()
+      << " s." << std::endl;
+    this->Log() << "finished_score " << this->totalScore << std::endl;
+    this->logStream.flush();
   }
 }
 

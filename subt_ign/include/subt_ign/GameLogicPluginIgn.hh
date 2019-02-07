@@ -46,11 +46,6 @@ namespace subt
     /// \param[in] _msg The message containing a list of collision information.
     // private: void OnStartCollision(ConstIntPtr &_msg);
 
-    /// \brief Write a simulation timestamp to a logfile.
-    /// \return A file stream that can be used to write additional
-    /// information to the logfile.
-    // private: std::ofstream &Log();
-
     private: std::unique_ptr<GameLogicPluginPrivate> dataPtr;
   };
 }

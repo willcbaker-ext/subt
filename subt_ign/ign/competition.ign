@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
+<%
+  worldName = 'tunnel_qual_ign'
+%>
 <ignition version='1.0'>
-
-  <!-- TODO(nkoenig) implement args that can be used throughout the ign file
-       For example in the gazebo run command and the game logic plugin
-  <arg world ></arg>
-  -->
 
   <!-- Start ROS first -->
   <!-- Make sure to source /opt/ros/melodic/setup.bash -->
@@ -17,14 +15,17 @@
       <name>IGN_GAZEBO_RESOURCE_PATH</name>
       <value>/home/nkoenig/subt_ws/src/subt/subt_gazebo/worlds</value>
     </env>
-    <command>ign-gazebo -r -v 2 -f tunnel_qual_ign.sdf</command>
+    <command>ign-gazebo -r -v 2 -f <%= worldName %>.sdf</command>
   </executable>
 
   <!-- The SubT challenge logic plugin -->
   <plugin name="subt::GameLogicPlugin" filename="libGameLogicPluginIgn.so">
     <!-- The collection of artifacts to locate -->
 
-    <world_name>tunnel_qual</world_name>
+    <world_name><%= worldName %></world_name>
+    <logging>
+      <filename_prefix>subt_tunnel_qual</filename_prefix>
+    </logging>
 
     <artifact>
       <name>radio_1</name>
