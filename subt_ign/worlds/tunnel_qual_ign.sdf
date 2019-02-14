@@ -2,6 +2,7 @@
 
 <sdf version="1.6">
   <world name="tunnel_qual_ign">
+    <!--
     <plugin
       filename="libignition-gazebo-physics-system.so"
       name="ignition::gazebo::systems::v0::Physics">
@@ -10,6 +11,7 @@
       filename="libignition-gazebo-systems.so"
       name="ignition::gazebo::systems::v0::SceneBroadcaster">
     </plugin>
+-->
 
     <gui fullscreen="0">
       <!-- 3D scene -->

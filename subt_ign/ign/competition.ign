@@ -3,20 +3,108 @@
   worldName = 'tunnel_qual_ign'
 %>
 <ignition version='1.0'>
+  <env>
+    <name>IGN_LAUNCH_PLUGIN_PATH</name>
+    <value>/home/nkoenig/subt_ws/install/lib</value>
+  </env>
+  <env>
+    <name>IGN_GAZEBO_RESOURCE_PATH</name>
+    <value>/home/nkoenig/subt_ws/install/share/subt_ign/worlds</value>
+  </env>
 
   <!-- Start ROS first -->
-  <!-- Make sure to source /opt/ros/melodic/setup.bash -->
+  <!-- Make sure to source /opt/ros/melodic/setup.bash
   <executable name='ros'>
     <command>roscore</command>
-  </executable>
+  </executable>-->
 
-  <executable name='gazebo-server'>
-    <env>
-      <name>IGN_GAZEBO_RESOURCE_PATH</name>
-      <value>/home/nkoenig/subt_ws/src/subt/subt_gazebo/worlds</value>
-    </env>
-    <command>ign-gazebo -r -v 2 -f <%= worldName %>.sdf</command>
-  </executable>
+  <plugin name="ignition::plugins::GazeboServer"
+          filename="libignition-plugins-gazebo0.so">
+    <run_on_start>true</run_on_start>
+    <verbosity>2</verbosity>
+    <world_file><%= worldName %>.sdf</world_file>
+
+    <plugin entity_name="<%= worldName %>"
+            entity_type="world"
+            filename="libignition-gazebo-physics-system.so"
+            name="ignition::gazebo::systems::v0::Physics">
+    </plugin>
+    <plugin entity_name="<%= worldName %>"
+            entity_type="world"
+            filename="libignition-gazebo-systems.so"
+            name="ignition::gazebo::systems::v0::SceneBroadcaster">
+    </plugin>
+  </plugin>
+
+  <executable_wrapper>
+    <plugin name="ignition::plugins::GazeboGui"
+          filename="libignition-plugins-gazebogui0.so">
+      <plugin filename="Scene3D" name="3D View">
+        <ignition-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </ignition-gui>
+
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>-6 0 6 0 0.5 0</camera_pose>
+        <service>/world/<%= worldName %>/scene/info</service>
+        <pose_topic>/world/<%= worldName %>/pose/info</pose_topic>
+        <scene_topic>/world/<%= worldName %>/scene/info</scene_topic>
+        <deletion_topic>/world/<%= worldName %>/scene/deletion</deletion_topic>
+      </plugin>
+      <plugin filename="WorldControl" name="World control">
+        <ignition-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </ignition-gui>
+
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>true</start_paused>
+        <service>/world/<%= worldName %>/control</service>
+        <stats_topic>/world/<%= worldName %>/stats</stats_topic>
+
+      </plugin>
+
+      <plugin filename="WorldStats" name="World stats">
+        <ignition-gui>
+          <title>World stats</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">110</property>
+          <property type="double" key="width">290</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="right" target="right"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </ignition-gui>
+
+        <sim_time>true</sim_time>
+        <real_time>true</real_time>
+        <real_time_factor>true</real_time_factor>
+        <iterations>true</iterations>
+        <topic>/world/<%= worldName %>/stats</topic>
+      </plugin>
+    </plugin>
+  </executable_wrapper>
+
 
   <!-- The SubT challenge logic plugin -->
   <plugin name="subt::GameLogicPlugin" filename="libGameLogicPluginIgn.so">
