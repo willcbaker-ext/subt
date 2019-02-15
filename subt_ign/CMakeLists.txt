@@ -216,30 +216,21 @@ target_include_directories(${base_station_plugin_name}
    LIBRARY DESTINATION lib
    RUNTIME DESTINATION bin)
  
-# # Create the libRosFlashLightPlugin.so library.
-# set(ros_flashlight_plugin_name RosFlashLightPlugin)
-# add_library(${ros_flashlight_plugin_name} src/RosFlashLightPlugin.cc)
-# target_link_libraries(${ros_flashlight_plugin_name}
-#   ${catkin_LIBRARIES}
-#   LedPlugin
-# )
-# install(TARGETS ${ros_flashlight_plugin_name}
-#   ARCHIVE DESTINATION lib
-#   LIBRARY DESTINATION lib
-#   RUNTIME DESTINATION bin)
-# 
-# # Create the libLightVisualPlugin.so library.
-# set(light_visual_plugin_name LightVisualPlugin)
-# add_library(${light_visual_plugin_name} src/LightVisualPlugin.cc)
-# target_link_libraries(${light_visual_plugin_name}
-#   ${catkin_LIBRARIES}
-# )
-# install(TARGETS ${light_visual_plugin_name}
-#   ARCHIVE DESTINATION lib
-#   LIBRARY DESTINATION lib
-#   RUNTIME DESTINATION bin)
-# 
-# 
+# Create the libFlashLightPlugin.so library.
+set(flashlight_plugin_name FlashlightPlugin)
+add_library(${flashlight_plugin_name} src/FlashlightPlugin.cc)
+target_link_libraries(${flashlight_plugin_name}
+  ignition-common3::ignition-common3
+  ignition-plugin1::loader
+  ignition-tools::ignition-tools-launch
+  ignition-transport6::ignition-transport6
+  ${catkin_LIBRARIES}
+)
+install(TARGETS ${flashlight_plugin_name}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+
 # # Create the libVisibilityPlugin.so library.
 # set(visibility_plugin_name VisibilityPlugin)
 # add_library(${visibility_plugin_name} src/VisibilityPlugin.cc)

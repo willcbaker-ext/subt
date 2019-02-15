@@ -33,6 +33,17 @@
 
     <plugin entity_name="x1"
             entity_type="model"
+            filename="libFlashlightPlugin.so"
+            name="subt::FlashlightPlugin">
+      <service_name>enable</service_name>
+      <light>
+        <id>body/light_source</id>
+        <enable>true</enable>
+      </light>
+    </plugin>
+
+    <plugin entity_name="x1"
+            entity_type="model"
             filename="libignition-gazebo-systems.so"
             name="ignition::gazebo::systems::v0::DiffDrive">
       <left_joint>front_left_wheel_joint</left_joint>
