@@ -18,7 +18,7 @@
 #include <subt_gazebo_los_model/visibility_rf_model.h>
 #include <subt_rf_interface/subt_rf_model.h>
 
-#include <gazebo/physics/physics.hh>
+// #include <gazebo/physics/physics.hh>
 
 namespace subt
 {
@@ -36,7 +36,7 @@ VisibilityModel::VisibilityModel(
     : visibility_config(_visibility_config),
       default_range_config(_range_config)
 {
-  world = gazebo::physics::get_world();
+  // world = gazebo::physics::get_world();
       
   if (!this->visibilityTable.Load()) {
     ROS_ERROR("Unable to load visibility table data files");
@@ -123,15 +123,16 @@ bool VisibilityModel::VisualizeVisibility(const ignition::msgs::StringMsg &_req,
     per_cost_markers.insert(std::make_pair(i, markerMsg));
   }
   
-  std::string modelName = _req.data();
-  auto model = this->world->ModelByName(modelName);
-  if (!model)
-  {
-    ignerr << "[" << modelName << "] model not found" << std::endl;
-    return true;
-  }
+  // std::string modelName = _req.data();
+  // auto model = this->world->ModelByName(modelName);
+  // if (!model)
+  // {
+  //   ignerr << "[" << modelName << "] model not found" << std::endl;
+  //   return true;
+  // }
 
-  ignition::math::Vector3d from = model->WorldPose().Pos();
+  // ignition::math::Vector3d from = model->WorldPose().Pos();
+  ignition::math::Vector3d from;
   
 
   uint64_t index = 0;

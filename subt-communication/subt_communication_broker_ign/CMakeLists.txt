@@ -3,13 +3,13 @@ project(subt_communication_broker_ign)
 
 set(PKG_DEPENDS
   roscpp subt_communication_model subt_rf_interface
-  )
+)
 set(BUILD_DEPENDS
   ${PKG_DEPENDS}
-  )
+)
 set(RUN_DEPENDS
   ${PKG_DEPENDS}
-  )
+)
 
 #######################################
 ## Find dependencies
@@ -28,7 +28,7 @@ include_directories(
   ${ignition-transport6_INCLUDE_DIRS}
   ${ignition-msgs3_INCLUDE_DIRS}
   ${ignition-common3_INCLUDE_DIRS}
-  )
+)
 
 set(project_libs
   ${catkin_LIBRARIES}

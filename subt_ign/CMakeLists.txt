@@ -20,7 +20,7 @@ find_package(catkin REQUIRED
     subt_msgs
     message_generation
     subt_communication_broker_ign
-    subt_communication_model
+    subt_communication_model_ign
     subt_gazebo_los_model_ign
     subt_rf_interface_ign
 )
@@ -58,7 +58,7 @@ catkin_package(
     message_runtime
     std_srvs
     subt_communication_broker_ign
-    subt_communication_model
+    subt_communication_model_ign
     subt_rf_interface_ign
   INCLUDE_DIRS
   include

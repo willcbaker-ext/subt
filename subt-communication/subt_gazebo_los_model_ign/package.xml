@@ -14,10 +14,5 @@
   <depend>roscpp</depend>
   <depend>geometry_msgs</depend>
   <depend>subt_rf_interface_ign</depend>
-  <depend>gazebo</depend>
-  <depend>gazebo_ros</depend>
-  <depend>gazebo_plugins</depend>
-
-
 
 </package>

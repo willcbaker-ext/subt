@@ -19,10 +19,10 @@
 #include <fstream>
 #include <iostream>
 #include <utility>
-#include <gazebo/common/SystemPaths.hh>
-#include <gazebo/physics/Model.hh>
-#include <gazebo/physics/PhysicsIface.hh>
-#include <gazebo/physics/World.hh>
+// #include <gazebo/common/SystemPaths.hh>
+// #include <gazebo/physics/Model.hh>
+// #include <gazebo/physics/PhysicsIface.hh>
+// #include <gazebo/physics/World.hh>
 #include <ignition/math/graph/GraphAlgorithms.hh>
 #include <ignition/common/Util.hh>
 
@@ -42,7 +42,8 @@ VisibilityTable::VisibilityTable()
     return;
   }
 
-  std::string worldName = gazebo::physics::get_world()->Name();
+  // std::string worldName = gazebo::physics::get_world()->Name();
+  std::string worldName = "";
 
   this->worldPath = ignition::common::joinPaths(
     worldsDirectory, worldName + ".world");
@@ -150,7 +151,7 @@ uint64_t VisibilityTable::Index(const ignition::math::Vector3d &_position) const
 {
   for (auto const segment : this->worldSegments)
   {
-    const ignition::math::Box &box = segment.first;
+    const ignition::math::AxisAlignedBox &box = segment.first;
     if (box.Contains(_position))
       return segment.second;
   }
@@ -219,13 +220,13 @@ void VisibilityTable::CreateWorldSegments()
       continue;
     }
     std::string modelName = fields.at(2);
-    auto model = gazebo::physics::get_world()->ModelByName(modelName);
-    if (!model)
-    {
-      std::cerr << "Unable to find model [" << modelName << "]. "
-                << "Ignoring vertex" << std::endl;
-      continue;
-    }
+    // auto model = gazebo::physics::get_world()->ModelByName(modelName);
+    // if (!model)
+    // {
+    //   std::cerr << "Unable to find model [" << modelName << "]. "
+    //             << "Ignoring vertex" << std::endl;
+    //   continue;
+    // }
 
     // Add the bounding box and Id pair to the list.
     this->worldSegments.push_back(

@@ -14,16 +14,15 @@
  * limitations under the License.
  *
 */
-#include <csignal>
-#include "gazebo/gazebo_config.h"
-#include "gazebo/physics/physics.hh"
+#include <ignition/common/Console.hh>
 #include <subt_gazebo_los_model/VisibilityTable.hh>
 #include <subt_gazebo_los_model/VisibilityPlugin.hh>
 
-using namespace gazebo;
+using namespace subt;
 
-// Register this plugin with the simulator
-GZ_REGISTER_SYSTEM_PLUGIN(VisibilityPlugin)
+class subt::VisibilityPluginPrivate
+{
+};
 
 /////////////////////////////////////////////
 VisibilityPlugin::~VisibilityPlugin()
@@ -31,29 +30,30 @@ VisibilityPlugin::~VisibilityPlugin()
 }
 
 /////////////////////////////////////////////
-void VisibilityPlugin::Load(int /*_argc*/, char ** /*_argv*/)
+void VisibilityPlugin::Load(const tinyxml2::XMLElement *_elem)
 {
-}
+  std::cout << "HERE\n";
+  subt::VisibilityTable table;
+  std::string worldName;
+  std::string worldDir;
 
-/////////////////////////////////////////////
-void VisibilityPlugin::Init()
-{
-  this->worldUpdateConn = event::Events::ConnectWorldUpdateBegin(
-      boost::bind(&VisibilityPlugin::OnUpdate, this));
-}
+  const tinyxml2::XMLElement *elem = _elem->FirstChildElement("world_name");
 
-/////////////////////////////////////////////
-void VisibilityPlugin::OnUpdate()
-{
-  // Hack: When using ConnectWorldCreated, the bounding box of the models are
-  // not set properly. Instead, we use ConnectWorldUpdateBegin just once.
-  if (gazebo::physics::get_world()->SimTime() > gazebo::common::Time(1))
+  if (elem)
+    worldName = elem->GetText();
+  else
+    ignerr << "VisibilityPlugin is missing the <world_name> element.\n";
+
+  elem = _elem->FirstChildElement("world_dir");
+  if (elem)
+    worldDir = elem->GetText();
+  else
+    ignerr << "VisibilityPlugin is missing the <world_dir> element.\n";
+
+  if (!worldName.empty() && !worldDir.empty())
   {
-    subt::VisibilityTable table;
+    std::cout << "WORLD Name[" << worldName << "] World Dir[" << worldDir << "]\n";
+    table.Load(worldName, worldDir);
     table.Generate();
-    this->worldUpdateConn.reset();
-
-    // Send SIGINT to terminate Gazebo.
-    raise(SIGINT);
   }
 }

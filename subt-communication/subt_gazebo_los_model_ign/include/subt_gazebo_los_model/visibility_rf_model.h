@@ -17,8 +17,6 @@
 
 #pragma once
 
-#include <ignition/common.hh>
-#include <ignition/math.hh>
 #include <ignition/msgs.hh>
 #include <ignition/transport/Node.hh>
 
@@ -99,7 +97,7 @@ class VisibilityModel
 
   ignition::transport::Node node;
   subt::VisibilityTable visibilityTable;
-  gazebo::physics::WorldPtr world;
+  // gazebo::physics::WorldPtr world;
 
   visibility_model::rf_configuration visibility_config;
   range_model::rf_configuration default_range_config;

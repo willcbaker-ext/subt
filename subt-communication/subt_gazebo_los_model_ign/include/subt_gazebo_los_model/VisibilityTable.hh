@@ -18,12 +18,12 @@
 #ifndef SUBT_GAZEBO_VISIBILITYTABLE_HH_
 #define SUBT_GAZEBO_VISIBILITYTABLE_HH_
 
+#include <cstdint>
 #include <map>
 #include <string>
 #include <utility>
 #include <vector>
-#include <gazebo/physics/Model.hh>
-#include <ignition/math/Box.hh>
+#include <ignition/math/AxisAlignedBox.hh>
 #include <ignition/math/Vector3.hh>
 #include <subt_gazebo_los_model/VisibilityTypes.hh>
 
@@ -118,7 +118,7 @@ namespace subt
     /// segments is associated with a vertex in a graph.
     /// Mapping between a model's bouding box and a vertex Id.
     private: std::vector<
-               std::pair<ignition::math::Box, uint64_t>> worldSegments;
+             std::pair<ignition::math::AxisAlignedBox, uint64_t>> worldSegments;
 
     /// \brief A map that stores 3D points an the vertex id in which are located
     private: std::map<std::tuple<int32_t, int32_t, int32_t>, uint64_t> vertices;

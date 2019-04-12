@@ -5,15 +5,13 @@ set(PKG_DEPENDS
   roscpp
   geometry_msgs
   subt_rf_interface_ign
-  gazebo_ros
-  gazebo_plugins
-  )
+)
 set(BUILD_DEPENDS
   ${PKG_DEPENDS}
-  )
+)
 set(RUN_DEPENDS
   ${PKG_DEPENDS}
-  )
+)
 
 #######################################
 ## Find dependencies
@@ -21,21 +19,16 @@ set(RUN_DEPENDS
 
 find_package(catkin REQUIRED ${BUILD_DEPENDS})
 
-find_package(gazebo REQUIRED)
 find_package(ignition-common3 REQUIRED)
+find_package(ignition-msgs3 REQUIRED)
 find_package(ignition-math6 REQUIRED)
+find_package(ignition-transport6 REQUIRED)
 
 include_directories(
   include
   ${CATKIN_DEVEL_PREFIX}/include  
   ${catkin_INCLUDE_DIRS}
-  ${GAZEBO_INCLUDE_DIRS}  
-  )
-
-link_directories(
-  ${GAZEBO_LIBRARY_DIRS}
 )
-
 
 #######################################
 ## Declare Catkin package and installation
@@ -46,7 +39,7 @@ catkin_package(
   CATKIN_DEPENDS ${RUN_DEPENDS}
   DEPENDS
   LIBRARIES subt_gazebo_los_model_ign
-  )
+)
 
 # Create the libVisibilityPlugin.so library.
 set(visibility_plugin_name VisibilityPluginIgn)
@@ -56,6 +49,7 @@ add_library(${visibility_plugin_name}
   src/SimpleDOTParser.cc)
 target_link_libraries(${visibility_plugin_name}
   ${catkin_LIBRARIES}
+  ignition-common3::ignition-common3
 )
 install(TARGETS ${visibility_plugin_name}
   ARCHIVE DESTINATION lib
@@ -69,9 +63,11 @@ add_library(subt_gazebo_los_model_ign
 target_link_libraries(subt_gazebo_los_model_ign
   PUBLIC
   ${catkin_LIBRARIES}
-  ${GAZEBO_LIBRARIES}
+  ignition-common3::ignition-common3
   ignition-math6::ignition-math6
-  )
+  ignition-msgs3::ignition-msgs3
+  ignition-transport6::ignition-transport6
+)
 
 install(TARGETS subt_gazebo_los_model_ign
   ARCHIVE DESTINATION lib
@@ -82,7 +78,6 @@ install(TARGETS subt_gazebo_los_model_ign
 # target_link_libraries(simpleDOTParser
 #   ${comms_broker_plugin_name}
 # )
-
 
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}

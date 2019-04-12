@@ -22,7 +22,7 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <gazebo/physics/Model.hh>
+// #include <gazebo/physics/Model.hh>
 #include <ignition/math/Box.hh>
 #include <ignition/math/Vector3.hh>
 #include <subt_gazebo_los_model/VisibilityTypes.hh>

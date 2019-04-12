@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Open Source Robotics Foundation
+ * Copyright (C) 2019 Open Source Robotics Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,15 @@
  * limitations under the License.
  *
 */
-#ifndef SUBT_GAZEBO_VISIBILITYPLUGIN_HH_
-#define SUBT_GAZEBO_VISIBILITYPLUGIN_HH_
+#ifndef SUBT_IGN_VISIBILITYPLUGIN_HH_
+#define SUBT_IGN_VISIBILITYPLUGIN_HH_
 
-#include "gazebo/common/Plugin.hh"
-#include "gazebo/util/system.hh"
+#include <ignition/plugin/Register.hh>
+#include <ignition/tools/launch/Plugin.hh>
 
-namespace gazebo
+namespace subt
 {
+  class VisibilityPluginPrivate;
   /// \brief This plugin generates a vertex lookup table with the
   /// following contents:
   ///
@@ -43,24 +44,18 @@ namespace gazebo
   ///
   /// The visibility table (<WORLD_NAME>.dat) will be located in the same
   /// directory where the world file was located.
-  class GAZEBO_VISIBLE VisibilityPlugin : public SystemPlugin
-  {
+  class VisibilityPlugin : public ignition::launch::Plugin
+
     /// \brief Destructor
     public: virtual ~VisibilityPlugin();
 
-    /// \brief Load the plugin.
-    /// \param[in] _argc Number of command line arguments.
-    /// \param[in] _argv Array of command line arguments.
-    public: void Load(int _argc, char **_argv);
+    // Documentation inherited
+    public: virtual void Load(const tinyxml2::XMLElement *_elem) override final;
 
-    /// \brief Initialize the plugin.
-    private: void Init();
-
-    /// \brief World created callback
-    private: void OnUpdate();
-
-    /// \brief The world created connection.
-    private: event::ConnectionPtr worldUpdateConn;
+    private: std::unique_ptr<VisibilityPluginPrivate> dataPtr;
   };
 }
+
+// Register the plugin
+IGNITION_ADD_PLUGIN(subt::VisibilityPlugin, ignition::launch::Plugin)
 #endif

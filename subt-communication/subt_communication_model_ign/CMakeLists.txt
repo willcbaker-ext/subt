@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(subt_rf_interface_ign)
+project(subt_communication_model_ign)
 
 set(PKG_DEPENDS
   roscpp
-  geometry_msgs
+  subt_rf_interface_ign
 )
 set(BUILD_DEPENDS
   ${PKG_DEPENDS}
@@ -17,13 +17,10 @@ set(RUN_DEPENDS
 #######################################
 
 find_package(catkin REQUIRED ${BUILD_DEPENDS})
-find_package(ignition-launch0 REQUIRED)
-find_package(ignition-math6 REQUIRED)
 
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${ignition-math6_INCLUDE_DIRS}
 )
 
 # Set this project to use C++11
@@ -32,31 +29,30 @@ if (APPLE)
   set(CMAKE_CXX_FLAGS "-stdlib=libc++ ${CMAKE_CXX_FLAGS}")
 endif (APPLE)
 
+
 #######################################
 ## Declare Catkin package and installation
 #######################################
 
 catkin_package(
-  INCLUDE_DIRS include ${ignition-math6_INCLUDE_DIRS}
+  INCLUDE_DIRS include
   CATKIN_DEPENDS ${RUN_DEPENDS}
   DEPENDS
-  LIBRARIES subt_rf_range_model_ign ${ignition-math6_LIBRARIES}
+  LIBRARIES ${PROJECT_NAME}
 )
 
-add_library(subt_rf_range_model_ign src/subt_rf_model.cpp)
-target_link_libraries(subt_rf_range_model_ign ${catkin_LIBRARIES}
-  ${ignition-math6_LIBRARIES})
+add_library(${PROJECT_NAME} src/subt_communication_model.cpp)
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 if(CATKIN_ENABLE_TESTING)
-  catkin_add_gtest(${PROJECT_NAME}_unit_test test/unit_test.cpp)
+  catkin_add_gtest(${PROJECT_NAME}_unit_test tests/unit_test.cpp)
   target_link_libraries(${PROJECT_NAME}_unit_test
-    subt_rf_range_model_ign
-    ignition-launch0::ignition-launch0
-    ignition-math6::ignition-math6
+    ${PROJECT_NAME}
+    ${catkin_LIBRARIES}
     ${GTEST_LIBRARIES})
 endif()
 
-install(TARGETS subt_rf_range_model_ign
+install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
