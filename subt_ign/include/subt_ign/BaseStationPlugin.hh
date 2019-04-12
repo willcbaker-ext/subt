@@ -44,9 +44,9 @@ namespace subt
     /// \param[in] _dstPort Unused.
     /// \param[in] _data Serialized artifact.
     private: void OnArtifact(const std::string &_srcAddress,
-                            const std::string &_dstAddress,
-                            const uint32_t _dstPort,
-                            const std::string &_data);
+                             const std::string &_dstAddress,
+                             const uint32_t _dstPort,
+                             const std::string &_data);
 
     /// \brief An ignition transport node.
     private: ignition::transport::Node node;

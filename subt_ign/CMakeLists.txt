@@ -19,9 +19,10 @@ find_package(catkin REQUIRED
     std_srvs
     subt_msgs
     message_generation
-    subt_rf_interface
-    subt_communication_model
     subt_communication_broker_ign
+    subt_communication_model
+    subt_gazebo_los_model_ign
+    subt_rf_interface_ign
 )
 
 file(MAKE_DIRECTORY ${CATKIN_DEVEL_PREFIX}/include)
@@ -56,9 +57,9 @@ catkin_package(
   CATKIN_DEPENDS
     message_runtime
     std_srvs
-    subt_rf_interface
-    subt_communication_model
     subt_communication_broker_ign
+    subt_communication_model
+    subt_rf_interface_ign
   INCLUDE_DIRS
   include
   ${CATKIN_DEVEL_PREFIX}/include
@@ -217,6 +218,27 @@ target_include_directories(${base_station_plugin_name}
    ARCHIVE DESTINATION lib
    LIBRARY DESTINATION lib
    RUNTIME DESTINATION bin)
+
+# Create the libCommsBrokerPlugin.so library.
+set(comms_broker_plugin_name CommsBrokerPluginIgn)
+add_library(${comms_broker_plugin_name}
+  src/CommsBrokerPlugin.cc
+)
+target_include_directories(${comms_broker_plugin_name}
+  PRIVATE ${CATKIN_DEVEL_PREFIX}/include)
+target_link_libraries(${comms_broker_plugin_name}
+  PUBLIC
+  ${catkin_LIBRARIES}
+  ignition-transport6::ignition-transport6
+)
+add_dependencies(${comms_broker_plugin_name}
+  protobuf_compilation
+  ${${PROJECT_NAME}_EXPORTED_TARGETS}
+)
+install(TARGETS ${comms_broker_plugin_name}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
  
 # # Create the libRosFlashLightPlugin.so library.
 # set(ros_flashlight_plugin_name RosFlashLightPlugin)

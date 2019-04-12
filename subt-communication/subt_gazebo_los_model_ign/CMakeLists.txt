@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(subt_gazebo_los_model)
+project(subt_gazebo_los_model_ign)
 
 set(PKG_DEPENDS
   roscpp
   geometry_msgs
-  subt_rf_interface
+  subt_rf_interface_ign
   gazebo_ros
   gazebo_plugins
   )
@@ -22,8 +22,8 @@ set(RUN_DEPENDS
 find_package(catkin REQUIRED ${BUILD_DEPENDS})
 
 find_package(gazebo REQUIRED)
-find_package(ignition-common1 REQUIRED)
-find_package(ignition-math4 REQUIRED)
+find_package(ignition-common3 REQUIRED)
+find_package(ignition-math6 REQUIRED)
 
 include_directories(
   include
@@ -45,11 +45,11 @@ catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS ${RUN_DEPENDS}
   DEPENDS
-  LIBRARIES subt_gazebo_los_model
-)
+  LIBRARIES subt_gazebo_los_model_ign
+  )
 
 # Create the libVisibilityPlugin.so library.
-set(visibility_plugin_name VisibilityPlugin)
+set(visibility_plugin_name VisibilityPluginIgn)
 add_library(${visibility_plugin_name}
   src/VisibilityPlugin.cc
   src/VisibilityTable.cc
@@ -62,18 +62,18 @@ install(TARGETS ${visibility_plugin_name}
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
 
-add_library(subt_gazebo_los_model
+add_library(subt_gazebo_los_model_ign
   src/visibility_rf_model.cpp
   src/SimpleDOTParser.cc
   src/VisibilityTable.cc)
-target_link_libraries(subt_gazebo_los_model
+target_link_libraries(subt_gazebo_los_model_ign
   PUBLIC
   ${catkin_LIBRARIES}
   ${GAZEBO_LIBRARIES}
-  ignition-math4::ignition-math4
+  ignition-math6::ignition-math6
   )
 
-install(TARGETS subt_gazebo_los_model
+install(TARGETS subt_gazebo_los_model_ign
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin)
@@ -86,6 +86,4 @@ install(TARGETS subt_gazebo_los_model
 
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  )
-
-
+)
