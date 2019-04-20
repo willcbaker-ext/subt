@@ -27,10 +27,6 @@
 
 namespace subt
 {
-  /// \def Neighbors_M
-  /// \brief Map of neighbors
-  using Neighbors_M = std::map<std::string, double>;
-
   /// \brief All the supported artifact types.
   enum class ArtifactType : uint32_t
   {

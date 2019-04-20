@@ -31,9 +31,7 @@
 #include <subt_rf_interface/subt_rf_interface.h>
 #include <subt_communication_model/subt_communication_model.h>
 #include <subt_communication_broker/common_types.h>
-
 #include <subt_communication_broker/protobuf/datagram.pb.h>
-#include <subt_communication_broker/protobuf/neighbor_m.pb.h>
 
 namespace subt
 {
@@ -80,12 +78,8 @@ pose_update_function;
     /// \return A mutator to the team.
     public: TeamMembershipPtr Team();
 
-    /// \brief Send a message to each member
-    /// with its updated neighbors list.
-    public: void NotifyNeighbors();
-
     /// \brief Dispatch all incoming messages.
-   public: void DispatchMessages();
+    public: void DispatchMessages();
 
     /// \brief This method associates an endpoint with a broker client and its
     /// address. An endpoint is constructed as an address followed by ':',
@@ -171,22 +165,19 @@ pose_update_function;
     /// \brief An Ignition Transport node for communications.
     private: ignition::transport::Node node;
 
-    /// \brief The publisher for notifying neighbor updates.
-    private: ignition::transport::Node::Publisher neighborPub;
-
     /// \brief Protect data from races.
     private: std::mutex mutex;
 
     /// \brief Function handle for evaluating communication
     private: subt::communication_model::communication_function
-    communication_function;
+      communication_function;
 
-   private:
     /// \brief Default radio configuration
-    subt::communication_model::radio_configuration default_radio_configuration;
+    private: subt::communication_model::radio_configuration
+       default_radio_configuration;
 
     /// \brief Pose update function
-   private: pose_update_function pose_update_f;
+    private: pose_update_function pose_update_f;
   };
 
 }

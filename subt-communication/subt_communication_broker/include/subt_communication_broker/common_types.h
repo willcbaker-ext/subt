@@ -30,11 +30,6 @@ namespace subt
 namespace communication_broker
 {
 
-/// \def Neighbors_M
-/// \brief Map of neighbors
-/// \todo Fix second term to hold channel information (RSS, bitrate)
-using Neighbors_M = std::map<std::string, double>;
-
 /// \brief Structure used to store information about a member of the
 /// team.
 struct TeamMember
@@ -44,9 +39,6 @@ struct TeamMember
 
   /// \brief Address of this agent. E.g.: 192.168.1.2
   std::string address;
-
-  /// \brief List of neighbors and comms probabilities for this robot.
-  Neighbors_M neighbors;
 
   /// \brief Static configuration of radio for communication
   subt::communication_model::radio_configuration radio;
@@ -89,9 +81,6 @@ const std::string kAddrUnregistrationSrv = "address/unregister";
 
 /// \brief Service used to register an end point.
 const std::string kEndPointRegistrationSrv = "end_point/register";
-
-/// \brief Address used to receive neighbor updates.
-const std::string kNeighborsTopic = "neighbors";
 
 /// \brief Default port.
 const uint32_t kDefaultPort = 4100u;

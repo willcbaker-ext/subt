@@ -224,9 +224,6 @@ void CommsBrokerPlugin::OnUpdate()
     this->lastROSParameterCheckTime = now;
   }
 
-  // Send a message to each team member with its updated neighbors list.
-  this->broker.NotifyNeighbors();
-
   // Dispatch all the incoming messages, deciding whether the destination gets
   // the message according to the communication model.
   this->broker.DispatchMessages();
