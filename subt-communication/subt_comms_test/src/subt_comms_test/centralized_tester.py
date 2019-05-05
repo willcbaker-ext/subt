@@ -5,7 +5,7 @@ import struct
 
 import sys
 
-from std_msgs.msg import String
+from std_msgs.msg import String, Float64
 
 from subt_example.srv import CreatePeer
 
@@ -17,6 +17,7 @@ class CentralizedTester:
         self.send_count = send_count
         self.outgoing_data = []
         self.incoming_data = []
+        self.rssi = -float("inf")
         self.done = False
         self.send = False
 
@@ -38,10 +39,12 @@ class CentralizedTester:
         # Set topic names based on client names
         self.topic1 = '/' + name1 + '_control/' + name2 + "/send"
         self.topic2 = '/' + name2 + '_control/' + name1 + "/recv"
+        self.topic3 = '/' + name2 + '_control/' + name1 + "/rssi"
         print('Subscribing to [{}], publishing to [{}]'.format(self.topic2, self.topic1))
 
         self.send_pub = rospy.Publisher('%s' % self.topic1, String, queue_size=100)
         self.recv_sub = rospy.Subscriber('%s' % self.topic2, String, self.OnStringRecv)
+        self.rssi_sub = rospy.Subscriber('%s' % self.topic3, Float64, self.OnRssiRecv)
 
         self.r = None
 
@@ -52,6 +55,9 @@ class CentralizedTester:
     def OnStringRecv(self, data):
         seq = int(data.data)
         self.incoming_data.append((rospy.Time.now(), data, seq))
+
+    def OnRssiRecv(self, data):
+        self.rssi = data.data
 
     def PrintStatistics(self):
         if len(self.outgoing_data) != 0:
@@ -128,9 +134,13 @@ class CentralizedTester:
     def GetTXRate(self):
         return self.GetRate(self.outgoing_data)
 
+    def GetRssi(self):
+        return self.rssi
+    
     def ResetStatistics(self):
         self.incoming_data = []
         self.outgoing_data = []
+        self.rssi = -float("inf")
 
     def SendBurst(self, size_in_bytes):
         # Send sequence of packets of size self.payload_size such that

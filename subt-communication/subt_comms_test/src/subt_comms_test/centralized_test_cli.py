@@ -45,6 +45,7 @@ def run_curses(testers):
     col7 = 53 # tx bitrate
     col8 = 64 # rx bitrate
     col9 = 75 # Latency
+    col10 = 88 # RSSI
 
     help_row = 2 + len(testers) + 3
 
@@ -61,10 +62,9 @@ def run_curses(testers):
       B              Send burst of data
       }/{            Increase/decrease burst size
     """
-    
 
     stdscr_orig = curses.initscr()
-    stdscr = curses.newpad(help_row + 15, col9 + 15)
+    stdscr = curses.newpad(help_row + 15, col10 + 15)
     curses.noecho()
     curses.cbreak()
     curses.start_color()
@@ -92,6 +92,7 @@ def run_curses(testers):
     stdscr.addstr(2,col7,'Tx (kbps)')
     stdscr.addstr(2,col8,'Rx (kbps)')
     stdscr.addstr(2,col9,'Latency (ms)')
+    stdscr.addstr(2,col10,'RSSI (dBm)')
 
     stdscr.addstr(help_row-2,0,'-'*(col8+11))
     stdscr.addstr(help_row-1, 0, 'Burst size (bytes): {}'.format(burst_size))
@@ -111,7 +112,7 @@ def run_curses(testers):
             else:
                 color_selection = curses.color_pair(0)
 
-            stdscr.addstr(idx,0,' '*(col9+11), color_selection)
+            stdscr.addstr(idx,0,' '*(col10+11), color_selection)
 
             stats = x.test.GetStatistics()
             stdscr.addstr(idx,col1,'{}'.format(x.test.name1), color_selection)
@@ -128,6 +129,7 @@ def run_curses(testers):
             stdscr.addstr(idx, col7, '{:2.2f}'.format(x.test.GetTXRate() / 1000.0), color_selection)
             stdscr.addstr(idx, col8, '{:2.2f}'.format(x.test.GetRXRate() / 1000.0), color_selection)
             stdscr.addstr(idx, col9, '{:2.2f}'.format(x.test.GetLatency() * 1000.0), color_selection)
+            stdscr.addstr(idx, col10, '{:2.2f}'.format(x.test.GetRssi()), color_selection)
             idx = idx + 1
 
         # stdscr.refresh()
