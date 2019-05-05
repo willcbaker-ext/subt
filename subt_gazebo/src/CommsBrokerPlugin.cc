@@ -211,7 +211,7 @@ void CommsBrokerPlugin::OnUpdate()
                   const rf_interface::radio_state&,
                   const rf_interface::radio_state&,
                   const uint64_t&
-                  ) { return true; };
+                  ) { return std::make_tuple(true, 0); };
 
       broker.SetCommunicationFunction(f);
     }
