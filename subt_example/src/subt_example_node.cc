@@ -19,6 +19,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Float64.h>
 #include <std_srvs/SetBool.h>
 
 #include <chrono>
@@ -115,10 +116,14 @@ class Controller
   // indexed by remote name, store port and Callback function
   std::map<std::string,
            std::pair<ros::Subscriber, ros::Publisher>> peer_connections;
+  std::map<std::string,
+           std::pair<ros::Time, ros::Publisher>> neighbor_state_pubs;
 
   void SetCommsActive(double timeout=1.0);
   std::mutex comms_led_mutex;
   ros::Timer active_comms_timer;
+
+  ros::Timer neighbor_timer;
 };
 
 /////////////////////////////////////////////////
@@ -219,9 +224,42 @@ Controller::Controller(const std::string &_name,
         this->peer_connections.insert(std::make_pair(remote,
                                                      std::make_pair(sub, pub)));
 
+        ros::Publisher neighbor_pub =
+        pnh.advertise<std_msgs::Float64>(remote + "/rssi", 1);
+        this->neighbor_state_pubs.insert(
+            std::make_pair(remote,
+                           std::make_pair(ros::Time(), neighbor_pub)));
+
         return true;
       });
 
+  auto neighbor_cb = [this](const ros::TimerEvent& ) {
+    subt::CommsClient::Neighbor_M neighbors = this->client->Neighbors();
+
+    for(auto kvp : neighbors) {
+      std::string address = kvp.first;
+      ros::Time stamp = kvp.second.first;
+      double rssi = kvp.second.second;
+
+      auto neighbor_state_pub = this->neighbor_state_pubs.find(address);
+      if(neighbor_state_pub == this->neighbor_state_pubs.end()) {
+        ROS_WARN("Did not run /%s/create_peer service for %s",
+                 this->name.c_str(), address.c_str());
+        continue;
+      }
+
+      if(stamp > neighbor_state_pub->second.first) {
+        neighbor_state_pub->second.first = stamp;
+        std_msgs::Float64 data;
+        data.data = rssi;
+        neighbor_state_pub->second.second.publish(data);
+      }
+    }
+  };
+
+  double neighbor_pub_rate;
+  pnh.param("neighbor_publish_rate", neighbor_pub_rate, 5.0);
+  neighbor_timer = pnh.createTimer(ros::Duration(1.0/neighbor_pub_rate), neighbor_cb);
 }
 
 /////////////////////////////////////////////////
