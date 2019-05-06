@@ -146,7 +146,10 @@ Controller::Controller(const std::string &_name,
       = this->n.subscribe<std_msgs::String>(
           _name + "/comm", 1, &Controller::TeleopCommCallback, this);
 
-  this->client->Bind(&Controller::CommClientCallback, this);
+  if(!this->client->Bind(&Controller::CommClientCallback, this)) {
+    ROS_FATAL(
+        "subt_example_node did not successfully bind to the CommsClient");
+  }
 
   this->velPub
       = this->n.advertise<geometry_msgs::Twist>(_name + "/cmd_vel", 1);
@@ -243,8 +246,8 @@ Controller::Controller(const std::string &_name,
 
       auto neighbor_state_pub = this->neighbor_state_pubs.find(address);
       if(neighbor_state_pub == this->neighbor_state_pubs.end()) {
-        ROS_WARN("Did not run /%s/create_peer service for %s",
-                 this->name.c_str(), address.c_str());
+        // ROS_WARN("Did not run /%s/create_peer service for %s",
+        //          this->name.c_str(), address.c_str());
         continue;
       }
 
@@ -256,6 +259,10 @@ Controller::Controller(const std::string &_name,
       }
     }
   };
+
+  double beacon_interval;
+  pnh.param("beacon_interval", beacon_interval, 1.0);
+  this->client->StartBeaconInterval(ros::Duration(beacon_interval));
 
   double neighbor_pub_rate;
   pnh.param("neighbor_publish_rate", neighbor_pub_rate, 5.0);
