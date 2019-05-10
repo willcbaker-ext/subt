@@ -1,0 +1,25 @@
+											Urban Bend Right,0,-1	tunnel_tile_5,90,-1	constrained_tunnel_tile_tall,90,-1	Urban Bend Right,270,-1						
+							tunnel_tile_blocker,0,-1				tunnel_tile_5,0,-1	Radio,0,-1		tunnel_tile_5,0,-1						
+		tunnel_tile_blocker,0,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	Urban 4way Intersection,0,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	Urban Bend Right,180,-1			tunnel_tile_5,0,-1						
+							tunnel_tile_5,0,-1			Backpack,0,-1		Urban Bend Right,0,-1	tunnel_tile_5,90,-1	Urban 4way Intersection,0,-1	tunnel_tile_5,90,-1	Urban Bend Right,270,-1				
+							constrained_tunnel_tile_tall,0,-1				Phone,0,-1	tunnel_tile_5,0,-1		tunnel_tile_blocker,0,-1		tunnel_tile_5,0,-1	Toolbox,0,-1			
+		tunnel_tile_blocker,0,-1	tunnel_tile_blocker,0,-1				tunnel_tile_5,0,-1	Extinguisher,0,-1				tunnel_tile_blocker,0,-1				tunnel_tile_blocker,0,-1				
+		Urban Bend Right,90,-1	Urban 4way Intersection,0,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	Urban Bend Right,180,-1													
+			tunnel_tile_5,0,-1						Urban Bend Right,0,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	Urban Bend Right,270,-1	Radio,0,-1							
+			tunnel_tile_5,0,-1						tunnel_tile_5,0,-1			Urban Bend Right,90,-1	Urban Bend Right,270,-1							
+			tunnel_tile_6,180,-1						tunnel_tile_5,0,-1				tunnel_tile_5,0,-1	Toolbox,0,-1						
+			tunnel_tile_5,0,0						tunnel_tile_5,0,-1				tunnel_tile_5,0,-1							
+			tunnel_tile_5,0,0						tunnel_tile_5,0,-1	Phone,0,-1			tunnel_tile_5,0,-1		Urban Bend Right,0,-2	tunnel_tile_5,90,-2	Urban Bend Right,270,-2		Electrical Box,0,-2	
+tunnel_tile_5,90,2	tunnel_tile_6,90,1	tunnel_tile_6,90,0	Urban 4way Intersection,0,0	tunnel_tile_5,90,0	tunnel_tile_5,90,0	tunnel_tile_5,90,0	tunnel_tile_6,90,-1	tunnel_tile_5,90,-1	Urban 4way Intersection,0,-1	tunnel_tile_blocker,0,-1		tunnel_tile_blocker,0,-1	Urban 4way Intersection,0,-1	tunnel_tile_6,90,-2	Urban 4way Intersection,0,-2	tunnel_tile_5,90,-2	Urban 4way Intersection,0,-2	tunnel_tile_5,90,-2	tunnel_tile_5,90,-2	tunnel_tile_blocker,0,-2
+			tunnel_tile_7,180,0						tunnel_tile_5,0,-1				tunnel_tile_5,0,-1		Urban Bend Right,90,-2	tunnel_tile_5,90,-2	Urban Bend Right,180,-2			
+			tunnel_tile_5,0,1						tunnel_tile_5,0,-1				tunnel_tile_5,0,-1			Backpack,0,-2				
+			tunnel_tile_5,0,1						Urban Bend Right,90,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	tunnel_tile_5,90,-1	Urban Bend Right,180,-1							
+			Urban Bend Right,90,1	tunnel_tile_7,90,0	Urban Bend Right,270,0	Phone,0,0					Valve,0,-1									
+					Urban Bend Right,90,0	Urban Bend Right,270,0														
+						tunnel_tile_5,0,0	Valve,0,0													
+						tunnel_tile_5,0,0														
+						constrained_tunnel_tile_short,0,0							tunnel_tile_blocker,0,0							
+					Electrical Box,0,0	tunnel_tile_5,0,0		Backpack,0,0					tunnel_tile_5,0,0							
+						tunnel_tile_5,0,0	Urban Bend Right,0,0	tunnel_tile_5,90,0	tunnel_tile_5,90,0	Urban Bend Right,270,0			tunnel_tile_5,0,0							
+						Urban Bend Right,90,0	Urban Bend Right,180,0			tunnel_tile_5,0,0			tunnel_tile_5,0,0	Extinguisher,0,0						
+										Urban Bend Right,90,0	tunnel_tile_5,90,0	tunnel_tile_5,90,0	Urban Bend Right,180,0							
