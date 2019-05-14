@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
 <!--
   Generated with the tile_tsv.py script:
-    tile_tsv.py urban_ign.tsv
+    tile_tsv.py urban.tsv
 -->
 <sdf version="1.6">
-  <world name="urban_ign">
+  <world name="urban">
 
     <physics name="1ms" type="ode">
       <max_step_size>0.001</max_step_size>
@@ -38,10 +38,10 @@
         <ambient_light>0.4 0.4 0.4</ambient_light>
         <background_color>0.8 0.8 0.8</background_color>
         <camera_pose>-6 0 6 0 0.5 0</camera_pose>
-        <service>/world/urban_ign/scene/info</service>
-        <pose_topic>/world/urban_ign/pose/info</pose_topic>
-        <scene_topic>/world/urban_ign/scene/info</scene_topic>
-        <deletion_topic>/world/urban_ign/scene/deletion</deletion_topic>
+        <service>/world/urban/scene/info</service>
+        <pose_topic>/world/urban/pose/info</pose_topic>
+        <scene_topic>/world/urban/scene/info</scene_topic>
+        <deletion_topic>/world/urban/scene/deletion</deletion_topic>
       </plugin>
 
       <!-- World control -->
@@ -64,8 +64,8 @@
         <play_pause>true</play_pause>
         <step>true</step>
         <start_paused>true</start_paused>
-        <service>/world/urban_ign/control</service>
-        <stats_topic>/world/urban_ign/stats</stats_topic>
+        <service>/world/urban/control</service>
+        <stats_topic>/world/urban/stats</stats_topic>
 
       </plugin>
 
@@ -90,7 +90,7 @@
         <real_time>true</real_time>
         <real_time_factor>true</real_time_factor>
         <iterations>true</iterations>
-        <topic>/world/urban_ign/stats</topic>
+        <topic>/world/urban/stats</topic>
 
       </plugin>
 
@@ -648,56 +648,12 @@
       <!-- The collection of artifacts to locate -->
 
       <artifact>
-        <name>urban_bend_right_1</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_1</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_2</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
         <name>phone_1</name>
         <type>TYPE_PHONE</type>
       </artifact>
       <artifact>
         <name>radio_1</name>
         <type>TYPE_RADIO</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_2</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_3</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_1</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_4</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_left_1</name>
-        <type>TYPE_URBAN_BEND_LEFT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_left_2</name>
-        <type>TYPE_URBAN_BEND_LEFT</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_2</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_left_3</name>
-        <type>TYPE_URBAN_BEND_LEFT</type>
       </artifact>
       <artifact>
         <name>backpack_1</name>
@@ -708,84 +664,16 @@
         <type>TYPE_TOOLBOX</type>
       </artifact>
       <artifact>
-        <name>urban_straight_5</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
         <name>extinguisher_1</name>
         <type>TYPE_EXTINGUISHER</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_left_4</name>
-        <type>TYPE_URBAN_BEND_LEFT</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_3</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_6</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_left_5</name>
-        <type>TYPE_URBAN_BEND_LEFT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_3</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_7</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_4</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
       </artifact>
       <artifact>
         <name>radio_2</name>
         <type>TYPE_RADIO</type>
       </artifact>
       <artifact>
-        <name>urban_straight_8</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_9</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_5</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_6</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
         <name>toolbox_2</name>
         <type>TYPE_TOOLBOX</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_10</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_11</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_12</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_7</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_8</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
       </artifact>
       <artifact>
         <name>phone_2</name>
@@ -796,108 +684,20 @@
         <type>TYPE_ELECTRICAL_BOX</type>
       </artifact>
       <artifact>
-        <name>urban_straight_13</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_14</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_4</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_15</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_16</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_5</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_6</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_7</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_4way_intersection_8</name>
-        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_17</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_18</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_9</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_19</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
         <name>valve_1</name>
         <type>TYPE_VALVE</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_20</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_10</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_11</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_12</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
       </artifact>
       <artifact>
         <name>backpack_2</name>
         <type>TYPE_BACKPACK</type>
       </artifact>
       <artifact>
-        <name>urban_bend_right_13</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_14</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
         <name>phone_3</name>
         <type>TYPE_PHONE</type>
       </artifact>
       <artifact>
-        <name>urban_bend_right_15</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_16</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
         <name>valve_2</name>
         <type>TYPE_VALVE</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_21</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
       </artifact>
       <artifact>
         <name>backpack_3</name>
@@ -908,44 +708,8 @@
         <type>TYPE_ELECTRICAL_BOX</type>
       </artifact>
       <artifact>
-        <name>urban_straight_22</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_17</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_23</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_18</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_straight_24</name>
-        <type>TYPE_URBAN_STRAIGHT</type>
-      </artifact>
-      <artifact>
         <name>extinguisher_2</name>
         <type>TYPE_EXTINGUISHER</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_19</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_20</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_21</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
-      </artifact>
-      <artifact>
-        <name>urban_bend_right_22</name>
-        <type>TYPE_URBAN_BEND_RIGHT</type>
       </artifact>
     </plugin>
 
