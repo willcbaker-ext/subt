@@ -18,7 +18,7 @@ def model_include_string(tileNamePrefix, modelType,
     else:
         types_to_paths_f = lambda t : types_to_paths[t]
 
-    if 'tunnel_tile_' in modelType or 'urban_' in modelType:
+    if 'tunnel_tile_' in modelType or 'Urban' in modelType:
         global tunnel_tile_name_counter
         modelName = tileNamePrefix + "_" + str(tunnel_tile_name_counter)
         tunnel_tile_name_counter += 1
