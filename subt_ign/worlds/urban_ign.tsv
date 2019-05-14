@@ -6,20 +6,20 @@
 		tunnel_tile_blocker,0,0		tunnel_tile_blocker,0,0					Extinguisher,0,0														
 		Urban Bend Left,180,0		Urban 4way Intersection,0,0		Urban Straight,0,0		Urban Bend Left,270,0		Urban Bend Right,0,0		Urban Straight,0,0		Urban Bend Right,270,0	Radio,0,0								
 																							
-				Urban Straight,90,0						Urban Straight,90,0				Urban Bend Right,90,0		Urban Bend Right,270,0							
-																	Toolbox,0,0						
-				Urban Straight,90,0						Urban Straight,90,0						Urban Straight,90,0		Urban Bend Right,0,0		Urban Bend Right,270,0			
-											Phone,0,0											Electrical Box,0,0	
-Urban Straight,0,0		Urban Straight,0,0		Urban 4way Intersection,0,0		Urban Straight,0,0		Urban Straight,0,0		Urban 4way Intersection,0,0	tunnel_tile_blocker,0,0					Urban 4way Intersection,0,0		Urban 4way Intersection,0,0		Urban 4way Intersection,0,0		Urban Straight,0,0	tunnel_tile_blocker,0,0
+				Urban Straight,90,0						Urban Straight,90,0				Urban Bend Left,180,0		Urban Bend Right,270,0							
 																							
-				Urban Straight,90,0						Urban Bend Right,90,0		Urban Straight,0,0	Valve,0,0	Urban Straight,0,0		Urban Bend Right,180,0		Urban Bend Right,90,0		Urban Bend Right,180,0			
-																			Backpack,0,0				
-				Urban Bend Right,90,0		Urban Bend Right,270,0	Phone,0,0																
+				Urban Straight,90,0						Urban Straight,90,0						Urban Straight,270,0		Urban Bend Left,90,0		Urban Bend Left,0,0			
+											Phone,0,0												
+Urban Straight,0,0		Urban Straight,0,0		Urban 4way Intersection,0,0		Urban Straight,0,0		Urban Straight,0,0		Urban 4way Intersection,0,0	tunnel_tile_blocker,0,0					Urban 4way Intersection,180,0	Toolbox,0,0	Urban 4way Intersection,180,0		Urban 4way Intersection,90,0	Electrical Box,0,0	Urban Straight,180,0	tunnel_tile_blocker,0,0
 																							
-						Urban Bend Right,90,0		Urban Bend Right,270,0															
+				Urban Straight,90,0						Urban Bend Right,90,0		Urban Straight,180,0	Valve,0,0	Urban Straight,180,0		Urban Bend Right,180,0		Urban Bend Left,180,0	Backpack,0,0	Urban Bend Left,270,0			
+																							
+				Urban Bend Right,90,0		Urban Bend Left,0,0	Phone,0,0																
+																							
+						Urban Bend Right,90,0		Urban Bend Left,0,0															
 								Valve,0,0															
 								Urban Straight,90,0															
-											Backpack,0,0					tunnel_tile_blocker,0,0							
-						Electrical Box,0,0		Urban Straight,90,0		Urban Bend Right,0,0		Urban Straight,0,0		Urban Bend Right,270,0		Urban Straight,90,0							
-																	Extinguisher,0,0						
+																tunnel_tile_blocker,0,0							
+						Electrical Box,0,0		Urban Straight,90,0		Urban Bend Left,90,0	Backpack,0,0	Urban Straight,180,0		Urban Bend Left,0,0		Urban Straight,270,0							
+																Extinguisher,0,0							
 								Urban Bend Right,90,0		Urban Bend Right,180,0				Urban Bend Right,90,0		Urban Bend Right,180,0							
