@@ -196,6 +196,12 @@
     </include>
 
     <include>
+      <name>backpack_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
+      <pose>220.000000 -40.000000 0.000000 0 0 0.000000</pose>
+    </include>
+
+    <include>
       <name>urban_bend_left_1</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
       <pose>240.000000 -40.000000 0.000000 0 0 4.712389</pose>
@@ -217,12 +223,6 @@
       <name>urban_bend_left_3</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
       <pose>360.000000 -40.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>backpack_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
-      <pose>220.000000 -60.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -274,6 +274,12 @@
     </include>
 
     <include>
+      <name>tile_7</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
+      <pose>200.000000 -100.000000 0.000000 0 0 0.000000</pose>
+    </include>
+
+    <include>
       <name>urban_bend_left_4</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
       <pose>40.000000 -120.000000 0.000000 0 0 3.141593</pose>
@@ -298,8 +304,8 @@
     </include>
 
     <include>
-      <name>urban_bend_right_3</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
+      <name>urban_3-way_right_intersection_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban 3-Way Right Intersection</uri>
       <pose>200.000000 -120.000000 0.000000 0 0 0.000000</pose>
     </include>
 
@@ -310,7 +316,7 @@
     </include>
 
     <include>
-      <name>urban_bend_right_4</name>
+      <name>urban_bend_right_3</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>280.000000 -120.000000 0.000000 0 0 4.712389</pose>
     </include>
@@ -334,21 +340,15 @@
     </include>
 
     <include>
-      <name>urban_bend_right_5</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>280.000000 -160.000000 0.000000 0 0 1.570796</pose>
+      <name>urban_bend_left_6</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>280.000000 -160.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_6</name>
+      <name>urban_bend_right_4</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>320.000000 -160.000000 0.000000 0 0 4.712389</pose>
-    </include>
-
-    <include>
-      <name>toolbox_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Toolbox</uri>
-      <pose>340.000000 -180.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -366,31 +366,25 @@
     <include>
       <name>urban_straight_12</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
-      <pose>320.000000 -200.000000 0.000000 0 0 1.570796</pose>
+      <pose>320.000000 -200.000000 0.000000 0 0 4.712389</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_7</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>360.000000 -200.000000 0.000000 0 0 0.000000</pose>
+      <name>urban_bend_left_7</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>360.000000 -200.000000 0.000000 0 0 1.570796</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_8</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>400.000000 -200.000000 0.000000 0 0 4.712389</pose>
+      <name>urban_bend_left_8</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>400.000000 -200.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
       <name>phone_2</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Phone</uri>
       <pose>220.000000 -220.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>electrical_box_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Electrical Box</uri>
-      <pose>440.000000 -220.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -430,37 +424,55 @@
     </include>
 
     <include>
-      <name>tile_7</name>
+      <name>tile_8</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
       <pose>220.000000 -240.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
+      <name>urban_station_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Station</uri>
+      <pose>280.000000 -240.000000 0.000000 0 0 1.570796</pose>
+    </include>
+
+    <include>
       <name>urban_4way_intersection_6</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban 4way Intersection</uri>
-      <pose>320.000000 -240.000000 0.000000 0 0 0.000000</pose>
+      <pose>320.000000 -240.000000 0.000000 0 0 3.141593</pose>
+    </include>
+
+    <include>
+      <name>toolbox_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Toolbox</uri>
+      <pose>340.000000 -240.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
       <name>urban_4way_intersection_7</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban 4way Intersection</uri>
-      <pose>360.000000 -240.000000 0.000000 0 0 0.000000</pose>
+      <pose>360.000000 -240.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
       <name>urban_4way_intersection_8</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban 4way Intersection</uri>
-      <pose>400.000000 -240.000000 0.000000 0 0 0.000000</pose>
+      <pose>400.000000 -240.000000 0.000000 0 0 1.570796</pose>
+    </include>
+
+    <include>
+      <name>electrical_box_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Electrical Box</uri>
+      <pose>420.000000 -240.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
       <name>urban_straight_17</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
-      <pose>440.000000 -240.000000 0.000000 0 0 0.000000</pose>
+      <pose>440.000000 -240.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
-      <name>tile_8</name>
+      <name>tile_9</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
       <pose>460.000000 -240.000000 0.000000 0 0 0.000000</pose>
     </include>
@@ -472,7 +484,7 @@
     </include>
 
     <include>
-      <name>urban_bend_right_9</name>
+      <name>urban_bend_right_5</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>200.000000 -280.000000 0.000000 0 0 1.570796</pose>
     </include>
@@ -480,7 +492,7 @@
     <include>
       <name>urban_straight_19</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
-      <pose>240.000000 -280.000000 0.000000 0 0 0.000000</pose>
+      <pose>240.000000 -280.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
@@ -492,43 +504,43 @@
     <include>
       <name>urban_straight_20</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
-      <pose>280.000000 -280.000000 0.000000 0 0 0.000000</pose>
+      <pose>280.000000 -280.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_10</name>
+      <name>urban_bend_right_6</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>320.000000 -280.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_11</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>360.000000 -280.000000 0.000000 0 0 1.570796</pose>
-    </include>
-
-    <include>
-      <name>urban_bend_right_12</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>400.000000 -280.000000 0.000000 0 0 3.141593</pose>
+      <name>urban_bend_left_9</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>360.000000 -280.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
       <name>backpack_2</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
-      <pose>380.000000 -300.000000 0.000000 0 0 0.000000</pose>
+      <pose>380.000000 -280.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_13</name>
+      <name>urban_bend_left_10</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>400.000000 -280.000000 0.000000 0 0 4.712389</pose>
+    </include>
+
+    <include>
+      <name>urban_bend_right_7</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>80.000000 -320.000000 0.000000 0 0 1.570796</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_14</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>120.000000 -320.000000 0.000000 0 0 4.712389</pose>
+      <name>urban_bend_left_11</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>120.000000 -320.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -538,15 +550,15 @@
     </include>
 
     <include>
-      <name>urban_bend_right_15</name>
+      <name>urban_bend_right_8</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>120.000000 -360.000000 0.000000 0 0 1.570796</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_16</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>160.000000 -360.000000 0.000000 0 0 4.712389</pose>
+      <name>urban_bend_left_12</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>160.000000 -360.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -562,13 +574,7 @@
     </include>
 
     <include>
-      <name>backpack_3</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
-      <pose>220.000000 -420.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>tile_9</name>
+      <name>tile_10</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
       <pose>320.000000 -420.000000 0.000000 0 0 0.000000</pose>
     </include>
@@ -586,55 +592,61 @@
     </include>
 
     <include>
-      <name>urban_bend_right_17</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>200.000000 -440.000000 0.000000 0 0 0.000000</pose>
+      <name>urban_bend_left_13</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>200.000000 -440.000000 0.000000 0 0 1.570796</pose>
+    </include>
+
+    <include>
+      <name>backpack_3</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
+      <pose>220.000000 -440.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
       <name>urban_straight_23</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
-      <pose>240.000000 -440.000000 0.000000 0 0 0.000000</pose>
+      <pose>240.000000 -440.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_18</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
-      <pose>280.000000 -440.000000 0.000000 0 0 4.712389</pose>
+      <name>urban_bend_left_14</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
+      <pose>280.000000 -440.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
       <name>urban_straight_24</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
-      <pose>320.000000 -440.000000 0.000000 0 0 1.570796</pose>
+      <pose>320.000000 -440.000000 0.000000 0 0 4.712389</pose>
     </include>
 
     <include>
       <name>extinguisher_2</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Extinguisher</uri>
-      <pose>340.000000 -460.000000 0.000000 0 0 0.000000</pose>
+      <pose>320.000000 -460.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_19</name>
+      <name>urban_bend_right_9</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>160.000000 -480.000000 0.000000 0 0 1.570796</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_20</name>
+      <name>urban_bend_right_10</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>200.000000 -480.000000 0.000000 0 0 3.141593</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_21</name>
+      <name>urban_bend_right_11</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>280.000000 -480.000000 0.000000 0 0 1.570796</pose>
     </include>
 
     <include>
-      <name>urban_bend_right_22</name>
+      <name>urban_bend_right_12</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>320.000000 -480.000000 0.000000 0 0 3.141593</pose>
     </include>
@@ -648,6 +660,18 @@
       <!-- The collection of artifacts to locate -->
 
       <artifact>
+        <name>urban_bend_right_1</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_1</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_2</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
         <name>phone_1</name>
         <type>TYPE_PHONE</type>
       </artifact>
@@ -656,60 +680,288 @@
         <type>TYPE_RADIO</type>
       </artifact>
       <artifact>
+        <name>urban_straight_2</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_3</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_1</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_4</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
         <name>backpack_1</name>
         <type>TYPE_BACKPACK</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_1</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_2</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_2</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_3</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
       </artifact>
       <artifact>
         <name>toolbox_1</name>
         <type>TYPE_TOOLBOX</type>
       </artifact>
       <artifact>
+        <name>urban_straight_5</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
         <name>extinguisher_1</name>
         <type>TYPE_EXTINGUISHER</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_4</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_3</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_6</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_5</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_3-way_right_intersection_1</name>
+        <type>TYPE_URBAN_3-WAY_RIGHT_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_7</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_3</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
       </artifact>
       <artifact>
         <name>radio_2</name>
         <type>TYPE_RADIO</type>
       </artifact>
       <artifact>
-        <name>toolbox_2</name>
-        <type>TYPE_TOOLBOX</type>
+        <name>urban_straight_8</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_9</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_6</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_4</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_10</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_11</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_12</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_7</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_8</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
       </artifact>
       <artifact>
         <name>phone_2</name>
         <type>TYPE_PHONE</type>
       </artifact>
       <artifact>
+        <name>urban_straight_13</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_14</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_4</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_15</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_16</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_5</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_station_1</name>
+        <type>TYPE_URBAN_STATION</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_6</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>toolbox_2</name>
+        <type>TYPE_TOOLBOX</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_7</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
+        <name>urban_4way_intersection_8</name>
+        <type>TYPE_URBAN_4WAY_INTERSECTION</type>
+      </artifact>
+      <artifact>
         <name>electrical_box_1</name>
         <type>TYPE_ELECTRICAL_BOX</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_17</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_18</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_5</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_19</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
       </artifact>
       <artifact>
         <name>valve_1</name>
         <type>TYPE_VALVE</type>
       </artifact>
       <artifact>
+        <name>urban_straight_20</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_6</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_9</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
         <name>backpack_2</name>
         <type>TYPE_BACKPACK</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_10</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_7</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_11</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
       </artifact>
       <artifact>
         <name>phone_3</name>
         <type>TYPE_PHONE</type>
       </artifact>
       <artifact>
+        <name>urban_bend_right_8</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_12</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
         <name>valve_2</name>
         <type>TYPE_VALVE</type>
       </artifact>
       <artifact>
-        <name>backpack_3</name>
-        <type>TYPE_BACKPACK</type>
+        <name>urban_straight_21</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
       </artifact>
       <artifact>
         <name>electrical_box_2</name>
         <type>TYPE_ELECTRICAL_BOX</type>
       </artifact>
       <artifact>
+        <name>urban_straight_22</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_13</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>backpack_3</name>
+        <type>TYPE_BACKPACK</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_23</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_left_14</name>
+        <type>TYPE_URBAN_BEND_LEFT</type>
+      </artifact>
+      <artifact>
+        <name>urban_straight_24</name>
+        <type>TYPE_URBAN_STRAIGHT</type>
+      </artifact>
+      <artifact>
         <name>extinguisher_2</name>
         <type>TYPE_EXTINGUISHER</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_9</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_10</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_11</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
+      </artifact>
+      <artifact>
+        <name>urban_bend_right_12</name>
+        <type>TYPE_URBAN_BEND_RIGHT</type>
       </artifact>
     </plugin>
 
