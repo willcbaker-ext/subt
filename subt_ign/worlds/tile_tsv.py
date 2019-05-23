@@ -10,9 +10,64 @@ import yaml
 tunnel_tile_name_counter = 0
 artifact_name_counter = {}
 plugin_artifacts = ''
+# Maps from tuple representing the center of level bounding box, to Level
+plugin_levels = {}
+levels_counter = 0
+
+class Level:
+
+    def __init__(self, name, x, y, z, sx, sy, sz, buf=10):
+        self.name = name
+        self.x = x
+        self.y = y
+        self.z = z
+        self.sx = sx
+        self.sy = sy
+        self.sz = sz
+        self.buffer = buf
+
+        # List of strings of model names
+        self.refs = []
+
+    def add_ref(self, ref_name):
+        self.refs.append(ref_name)
+ 
+    def str(self):
+        s = """
+      <level name="%s">""" % self.name
+
+        for ref in self.refs:
+            s += """
+        <ref>%s</ref>""" % ref
+
+        s += """
+        <pose>%f %f %f 0 0 0</pose>
+        <geometry><box><size>%f %f %f</size></box></geometry>
+        <buffer>%f</buffer>
+      </level>""" % (self.x, self.y, self.z, self.sx, self.sy, self.sz, self.buffer)
+
+        return s
+
+# Calculate the center of the level to put a model, based on the model center
+# and bounding box size of levels. Assumes all levels have the same size.
+def calculate_level_center(model_x, model_y, model_z, levels_sx, levels_sy, levels_sz):
+
+    lx = math.trunc(model_x / levels_sx) * levels_sx + 0.5 * levels_sx
+    ly = math.trunc(model_y / levels_sy) * levels_sy + 0.5 * levels_sy
+    lz = math.trunc(model_z / levels_sz) * levels_sz + 0.5 * levels_sz
+
+    return (lx, ly, lz)
+
+def expand_levels(levels_dictionary):
+    s = ''
+    for level in levels_dictionary.values():
+        s += level.str()
+    return s
 
 def model_include_string(tileNamePrefix, modelType,
-                         pose_x, pose_y, pose_z, pose_yaw, types_to_paths=None):
+                         pose_x, pose_y, pose_z, pose_yaw,
+                         levels_sx, levels_sy, levels_sz, levels_buf,
+                         types_to_paths=None):
     if types_to_paths is None:
         types_to_paths_f = lambda t : t
     else:
@@ -35,6 +90,19 @@ def model_include_string(tileNamePrefix, modelType,
         <name>%s</name>
         <type>TYPE_%s</type>
       </artifact>""" % (modelName, model_type.upper())
+
+    # Levels plugin for this model
+    global plugin_levels
+    global levels_counter
+    lx, ly, lz = calculate_level_center(
+        float(pose_x), float(pose_y), float(pose_z),
+        levels_sx, levels_sy, levels_sz)
+    if (lx, ly, lz) not in plugin_levels.keys():
+        plugin_levels[(lx, ly, lz)] = Level("level" + str(levels_counter),
+            lx, ly, lz, levels_sx, levels_sy, levels_sz, levels_buf)
+        levels_counter += 1
+    plugin_levels[(lx, ly, lz)].add_ref(modelName)
+
     return """    <include>
       <name>%s</name>
       <uri>%s</uri>
@@ -64,6 +132,7 @@ def print_tsv_model_includes(args):
                                          args.y0 - iy*args.scale_y,
                                          args.z0 + z_level*args.scale_z,
                                          yawDegrees * math.pi / 180,
+                                         args.levels_sx, args.levels_sy, args.levels_sz, args.levels_buf,
                                          types_to_paths))
 
 def parse_args(argv):
@@ -79,6 +148,10 @@ def parse_args(argv):
     parser.add_argument('--wind_x', dest='wind_x', type=float, default=0, help='global wind velocity in X')
     parser.add_argument('--wind_y', dest='wind_y', type=float, default=0, help='global wind velocity in Y')
     parser.add_argument('--wind_z', dest='wind_z', type=float, default=0, help='global wind velocity in Z')
+    parser.add_argument('--levels_sx', dest='levels_sx', type=float, default=200, help='Levels box size in X')
+    parser.add_argument('--levels_sy', dest='levels_sy', type=float, default=200, help='Levels box size in Y')
+    parser.add_argument('--levels_sz', dest='levels_sz', type=float, default=200, help='Levels box size in Z')
+    parser.add_argument('--levels_buf', dest='levels_buf', type=float, default=20, help='Levels box buffer size')
     parser.add_argument('--map-file', type=str,
         default=os.path.join(os.path.dirname(os.path.realpath(__file__)), "type_to_path.yaml"),
         help='YAML file mapping model types in tsv to file paths')
@@ -128,7 +201,9 @@ def check_main():
     <!-- Tunnel tiles and artifacts -->""" %
   (' '.join(sys.argv).replace('--', '-\-'), args.world_name))
     print_tsv_model_includes(args)
+
     global plugin_artifacts
+    global plugin_levels
     print("""
     <!-- The SubT challenge logic plugin -->
     <plugin name="game_logic_plugin" filename="libGameLogicPlugin.so">
@@ -196,11 +271,24 @@ def check_main():
       </vertical>
     </plugin>
 
+    <!-- Levels plugin -->
+    <plugin name="ignition::gazebo" filename="dummy">
+      <performer name="perf_x2">
+        <ref>X2</ref>
+        <geometry><box><size>2 2 2</size></box></geometry>
+      </performer>
+
+      <performer name="perf_x1">
+        <ref>X1</ref>
+        <geometry><box><size>2 2 2</size></box></geometry>
+      </performer>
+
+%s
+    </plugin>
+
   </world>
 </sdf>""" %
-(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z))
+(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z, expand_levels(plugin_levels)))
         
 if __name__ == '__main__':
     check_main()
-
-
