@@ -23,6 +23,110 @@
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/subt_tunnel_staging_area/2</uri>
     </include>
 
+    <!-- Barriers -->
+    <include>
+      <name>barrier_0_-1</name>
+      <pose>8.0 -11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_0_1</name>
+      <pose>8.0 11 0 0 0 0 </pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_1_-1</name>
+      <pose>3.7 -11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_1_1</name>
+      <pose>3.7 11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_2_-1</name>
+      <pose>-0.5999999999999996 -11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_2_1</name>
+      <pose>-0.5999999999999996 11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_3_-1</name>
+      <pose>-4.899999999999999 -11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_3_1</name>
+      <pose>-4.899999999999999 11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_4_-1</name>
+      <pose>-9.2 -11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_4_1</name>
+      <pose>-9.2 11 0 0 0 0</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-9.5_-2</name>
+      <pose>10.5 -8.6 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-9.5_2</name>
+      <pose>10.5 8.6 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-32_-2</name>
+      <pose>-12 -8.6 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-32_-1</name>
+      <pose>-12 -4.3 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-32_0</name>
+      <pose>-12 0.0 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-32_1</name>
+      <pose>-12 4.3 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+  
+    <include>
+      <name>barrier_-32_2</name>
+      <pose>-12 8.6 0 0 0 1.5707963267948966</pose>
+      <uri> https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Jersey Barrier </uri>
+    </include>
+
+
     <!-- The base station -->
     <include>
       <static>true</static>
@@ -574,182 +678,128 @@
         <geometry><box><size>2 2 2</size></box></geometry>
       </performer>
 
+
       <level name="level1">
-        <ref>tile_0</ref>
-        <ref>tile_1</ref>
-        <ref>tile_2</ref>
         <ref>tile_3</ref>
+        <ref>tile_4</ref>
         <ref>tile_5</ref>
-        <ref>radio_1</ref>
         <ref>tile_6</ref>
+        <ref>tile_7</ref>
+        <pose>100.000000 300.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
+      </level>
+      <level name="level2">
+        <ref>tile_13</ref>
+        <ref>tile_14</ref>
         <ref>tile_15</ref>
+        <ref>extinguisher_1</ref>
+        <ref>tile_19</ref>
+        <ref>tile_24</ref>
+        <ref>tile_25</ref>
+        <ref>tile_26</ref>
+        <ref>radio_2</ref>
+        <ref>tile_28</ref>
+        <ref>tile_29</ref>
+        <ref>tile_30</ref>
+        <ref>tile_32</ref>
+        <ref>tile_33</ref>
+        <ref>tile_34</ref>
+        <ref>phone_2</ref>
+        <ref>tile_41</ref>
+        <ref>tile_42</ref>
+        <ref>tile_43</ref>
+        <ref>tile_44</ref>
+        <ref>toolbox_2</ref>
+        <ref>tile_45</ref>
+        <ref>tile_50</ref>
+        <ref>tile_51</ref>
+        <ref>valve_1</ref>
+        <ref>tile_52</ref>
+        <ref>tile_53</ref>
+        <ref>tile_54</ref>
+        <ref>tile_61</ref>
+        <pose>300.000000 100.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
+      </level>
+      <level name="level4">
         <ref>tile_16</ref>
         <ref>tile_17</ref>
-        <ref>tile_19</ref>
+        <ref>tile_18</ref>
         <ref>tile_20</ref>
         <ref>tile_21</ref>
         <ref>tile_22</ref>
         <ref>tile_23</ref>
-        <ref>phone_1</ref>
-        <ref>tile_25</ref>
-        <ref>tile_26</ref>
         <ref>tile_27</ref>
-        <ref>toolbox_1</ref>
         <ref>tile_31</ref>
-        <ref>tile_32</ref>
-
-        <pose>295 190 0 0 0 0</pose>
-        <geometry><box><size>140 110 100</size></box></geometry>
-        <buffer>10</buffer>
+        <ref>tile_36</ref>
+        <ref>tile_37</ref>
+        <ref>tile_38</ref>
+        <ref>tile_39</ref>
+        <ref>tile_40</ref>
+        <ref>tile_49</ref>
+        <ref>tile_56</ref>
+        <ref>tile_57</ref>
+        <ref>phone_3</ref>
+        <ref>tile_58</ref>
+        <ref>tile_59</ref>
+        <ref>valve_2</ref>
+        <ref>tile_60</ref>
+        <pose>100.000000 100.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
       </level>
-
-      <level name="level2">
-        <ref>tile_4</ref>
-        <ref>tile_5</ref>
+      <level name="level6">
+        <ref>tile_63</ref>
+        <ref>backpack_3</ref>
+        <ref>tile_64</ref>
+        <ref>tile_65</ref>
+        <ref>tile_66</ref>
+        <ref>extinguisher_2</ref>
+        <ref>tile_68</ref>
+        <ref>tile_69</ref>
+        <ref>tile_70</ref>
+        <pose>300.000000 -100.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
+      </level>
+      <level name="level5">
+        <ref>electrical_box_2</ref>
+        <ref>tile_62</ref>
+        <ref>tile_67</ref>
+        <pose>100.000000 -100.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
+      </level>
+      <level name="level0">
+        <ref>tile_0</ref>
+        <ref>tile_1</ref>
+        <ref>tile_2</ref>
+        <ref>phone_1</ref>
         <ref>radio_1</ref>
-        <ref>tile_7</ref>
         <ref>tile_8</ref>
+        <ref>backpack_1</ref>
         <ref>tile_9</ref>
         <ref>tile_10</ref>
         <ref>tile_11</ref>
         <ref>tile_12</ref>
-        <ref>tile_13</ref>
-        <ref>tile_14</ref>
-        <ref>tile_15</ref>
-        <ref>tile_16</ref>
-        <ref>backpack_1</ref>
-
-        <pose>155 200 0 0 0 0</pose>
-        <geometry><box><size>200 30 100</size></box></geometry>
-        <buffer>10</buffer>
+        <pose>300.000000 300.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
       </level>
-
       <level name="level3">
-        <ref>tile_4</ref>
-        <ref>tile_12</ref>
-        <ref>tile_18</ref>
-        <ref>tile_24</ref>
-        <ref>tile_30</ref>
-        <ref>tile_38</ref>
-        <ref>extinguisher_1</ref>
-
-        <pose>165 160 0 0 0 0</pose>
-        <geometry><box><size>35 110 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level4">
-        <ref>tile_28</ref>
-        <ref>tile_29</ref>
-        <ref>tile_30</ref>
-        <ref>extinguisher_1</ref>
-        <ref>tile_33</ref>
-        <ref>tile_34</ref>
+        <ref>toolbox_1</ref>
         <ref>tile_35</ref>
-        <ref>tile_36</ref>
-        <ref>tile_37</ref>
-        <ref>tile_38</ref>
-
-        <pose>110 130 0 0 0 0</pose>
-        <geometry><box><size>140 45 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level5">
-        <ref>tile_28</ref>
-        <ref>tile_29</ref>
-        <ref>tile_33</ref>
-        <ref>tile_34</ref>
-        <ref>tile_35</ref>
-        <ref>tile_39</ref>
-        <ref>tile_44</ref>
-        <ref>tile_48</ref>
-        <ref>tile_51</ref>
-        <ref>tile_54</ref>
-        <ref>tile_62</ref>
-        <ref>tile_63</ref>
-        <ref>tile_64</ref>
-
-        <pose>90 30 0 0 0 0</pose>
-        <geometry><box><size>50 230 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level6">
-        <ref>tile_40</ref>
-        <ref>tile_41</ref>
-        <ref>tile_42</ref>
-        <ref>tile_43</ref>
-        <ref>radio_2</ref>
-        <ref>tile_45</ref>
         <ref>tile_46</ref>
-        <ref>tile_47</ref>
-        <ref>tile_49</ref>
-        <ref>tile_50</ref>
-        <ref>toolbox_2</ref>
-        <ref>tile_52</ref>
-        <ref>tile_53</ref>
-        <ref>tile_55</ref>
-        <ref>phone_2</ref>
-        <ref>tile_56</ref>
-        <ref>tile_68</ref>
-        <ref>tile_69</ref>
-        <ref>tile_70</ref>
-        <ref>valve_1</ref>
-
-        <pose>240 20 0 0 0 0</pose>
-        <geometry><box><size>120 180 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level7">
-        <ref>phone_2</ref>
-        <ref>tile_60</ref>
-        <ref>tile_61</ref>
-        <ref>tile_62</ref>
-        <ref>tile_63</ref>
-        <ref>tile_64</ref>
-        <ref>tile_65</ref>
-        <ref>tile_66</ref>
-        <ref>tile_67</ref>
-        <ref>tile_68</ref>
-        <ref>tile_69</ref>
-        <ref>tile_70</ref>
-        <pose>100 0 0 0 0 0</pose>
-        <geometry><box><size>260 50 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level8">
-        <ref>tile_57</ref>
-        <ref>tile_58</ref>
-        <ref>tile_59</ref>
         <ref>electrical_box_1</ref>
+        <ref>tile_47</ref>
+        <ref>tile_48</ref>
         <ref>backpack_2</ref>
-
-        <pose>340 0 0 0 0 0</pose>
-        <geometry><box><size>150 60 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level9">
-        <ref>phone_3</ref>
-        <ref>valve_2</ref>
-        <ref>electrical_box_2</ref>
-
-        <pose>110 -145 0 0 0 0</pose>
-        <geometry><box><size>100 160 100</size></box></geometry>
-        <buffer>10</buffer>
-      </level>
-
-      <level name="level10">
-        <ref>electrical_box_2</ref>
-        <ref>backpack_3</ref>
-        <ref>extinguisher_2</ref>
-
-        <pose>220 -200 0 0 0 0</pose>
-        <geometry><box><size>175 100 100</size></box></geometry>
-        <buffer>10</buffer>
+        <ref>tile_55</ref>
+        <pose>500.000000 100.000000 100.000000 0 0 0</pose>
+        <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
+        <buffer>20.000000</buffer>
       </level>
 
     </plugin>

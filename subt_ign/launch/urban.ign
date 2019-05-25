@@ -223,12 +223,12 @@
       <type>TYPE_RADIO</type>
     </artifact>
     <artifact>
-      <name>toolbox_2</name>
-      <type>TYPE_TOOLBOX</type>
-    </artifact>
-    <artifact>
       <name>phone_2</name>
       <type>TYPE_PHONE</type>
+    </artifact>
+    <artifact>
+      <name>toolbox_2</name>
+      <type>TYPE_TOOLBOX</type>
     </artifact>
     <artifact>
       <name>electrical_box_1</name>
@@ -251,12 +251,12 @@
       <type>TYPE_VALVE</type>
     </artifact>
     <artifact>
-      <name>backpack_3</name>
-      <type>TYPE_BACKPACK</type>
-    </artifact>
-    <artifact>
       <name>electrical_box_2</name>
       <type>TYPE_ELECTRICAL_BOX</type>
+    </artifact>
+    <artifact>
+      <name>backpack_3</name>
+      <type>TYPE_BACKPACK</type>
     </artifact>
     <artifact>
       <name>extinguisher_2</name>
