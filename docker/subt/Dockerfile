@@ -87,7 +87,7 @@ RUN mkdir -p /home/$USERNAME/.gazebo && hg clone https://bitbucket.org/osrf/gaze
 
 RUN mkdir -p subt_ws/src \
  && cd subt_ws/src \
- && hg clone https://bitbucket.org/osrf/subt
+ && hg clone https://bitbucket.org/osrf/subt -b gazebo9
 
 WORKDIR /home/$USERNAME/subt_ws
 
