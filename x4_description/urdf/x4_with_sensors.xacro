@@ -45,7 +45,23 @@
   <xacro:default_pressure_sensor namespace="${namespace}" parent_link="${namespace}/base_link" />
 
   <!-- Mount an ADIS16448 IMU. -->
-  <xacro:default_imu namespace="${namespace}" parent_link="${namespace}/base_link" />
+  <xacro:imu_plugin_macro 
+    namespace="${namespace}"
+    imu_suffix=""
+    parent_link="${namespace}/base_link"
+    imu_topic="imu/data"
+    mass_imu_sensor="0.015"
+    gyroscope_noise_density="0.0003394"
+    gyroscope_random_walk="0.000038785"
+    gyroscope_bias_correlation_time="1000.0"
+    gyroscope_turn_on_bias_sigma="0.0087"
+    accelerometer_noise_density="0.004"
+    accelerometer_random_walk="0.006"
+    accelerometer_bias_correlation_time="300.0"
+    accelerometer_turn_on_bias_sigma="0.1960">
+    <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </xacro:imu_plugin_macro>
 
   <!-- Sensor configuration #1
          * HD camera
@@ -172,6 +188,49 @@
       <parent link="${namespace}/base_link" />
       <child link="${namespace}/laser" />
     </joint>
+  </xacro:if>
+
+  <!-- Sensor configuration #5
+         * HD camera
+         * HD camera
+         * IMU
+  -->
+  <xacro:if value="$(optenv X4_SENSOR_CONFIG_5 0)">
+    <xacro:camera_macro
+      namespace="${namespace}"
+      parent_link="${namespace}/base_link"
+      camera_suffix="front_R"
+      frame_rate="20"
+      horizontal_fov="2"
+      image_width="1280"
+      image_height="960"
+      image_format="R8G8B8"
+      min_distance="0.02"
+      max_distance="100"
+      noise_mean="0.0"
+      noise_stddev="0.007"
+      enable_visual="true">
+      <box size="0.02 0.05 0.05" />
+      <origin xyz="0.125 -0.07 -0.08" rpy="0 0 0" />
+    </xacro:camera_macro>
+
+    <xacro:camera_macro
+      namespace="${namespace}"
+      parent_link="${namespace}/base_link"
+      camera_suffix="front_L"
+      frame_rate="20"
+      horizontal_fov="2"
+      image_width="1280"
+      image_height="960"
+      image_format="R8G8B8"
+      min_distance="0.02"
+      max_distance="100"
+      noise_mean="0.0"
+      noise_stddev="0.007"
+      enable_visual="true">
+      <box size="0.02 0.05 0.05" />
+      <origin xyz="0.125 0.07 -0.08" rpy="0 0 0" />
+    </xacro:camera_macro>
   </xacro:if>
 
 </robot>
