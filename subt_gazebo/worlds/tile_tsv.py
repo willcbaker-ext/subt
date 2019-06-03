@@ -39,7 +39,7 @@ def model_include_string(tileNamePrefix, modelType,
                      float(pose_yaw))
 
 def print_tsv_model_includes(args):
-    with open(args.file_name, 'rb') as tsvfile:
+    with open(args.file_name, 'rt') as tsvfile:
         spamreader = csv.reader(tsvfile, delimiter='\t')
         for iy, row in enumerate(spamreader):
             for ix, cell in enumerate(row):
