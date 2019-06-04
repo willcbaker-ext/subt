@@ -15,6 +15,7 @@ def generate_model_name(tileNamePrefix, modelType):
     if 'tunnel_tile_' in modelType:
         global tunnel_tile_name_counter
         modelName = tileNamePrefix + "_" + str(tunnel_tile_name_counter)
+        counter = tunnel_tile_name_counter
         tunnel_tile_name_counter += 1
     else:
         global artifact_name_counter
@@ -23,13 +24,14 @@ def generate_model_name(tileNamePrefix, modelType):
         artifact_name_counter[modelType] += 1
         model_type = modelType.lower().replace(' ', '_')
         modelName = model_type + '_' + str(artifact_name_counter[modelType])
+        counter = artifact_name_counter[modelType]
         global plugin_artifacts
         plugin_artifacts += """
       <artifact>
         <name>%s</name>
         <type>TYPE_%s</type>
       </artifact>""" % (modelName, model_type.upper())
-    return modelName
+    return (modelName, counter)
 
 def model_include_string(modelName, modelType,
                          pose_x, pose_y, pose_z, pose_yaw):
@@ -248,6 +250,30 @@ def check_main():
     print_graph_top(args, graph_file=graph_file)
     print_world_top(args, world_file=world_file)
 
+    # vert_id, vert_id, tile_type, vert_id
+    vert_fmt_base = '  %s   [label="%s::%s::BaseStation"];'
+    vert_fmt = '  %-3d [label="%d::%s::%s"];'
+    # vert1_id, vert2_id, edge_cost
+    edge_fmt = '  %d -- %d [label=%d];%s'
+
+    # (iy, ix): iv
+    cell_to_iv = dict()
+    cell_to_mesh = dict()
+    cell_to_yaw = dict()
+
+    BASE_MESH = 'base_station'
+    base_symbol = 'S'
+
+    print('''
+graph {
+  /* ==== Vertices ==== */
+
+  /* Base station / Staging area */''', file=graph_file)
+
+    # First vertex is base station, not in tsv
+    print(vert_fmt_base % (base_symbol, base_symbol, BASE_MESH), file=graph_file)
+    print('', file=graph_file)
+
     # read from tsv spreadsheet file
     with open(args.tsv_name, 'rt') as tsvfile:
         spamreader = csv.reader(tsvfile, delimiter='\t')
@@ -258,13 +284,30 @@ def check_main():
                         modelType = parts[0]
                         yawDegrees = float(parts[1])
                         z_level = float(parts[2])
-                        modelName = generate_model_name("tile", modelType)
+                        (modelName, iv) = generate_model_name("tile", modelType)
                         print(model_include_string(modelName, modelType,
                                          args.x0 + ix*args.scale_x,
                                          args.y0 - iy*args.scale_y,
                                          args.z0 + z_level*args.scale_z,
                                          yawDegrees * math.pi / 180),
                                          file=world_file)
+
+                        # Ignore artifacts in topology
+                        if modelType not in GraphRules.artifacts:
+                            print(vert_fmt % (iv, iv, modelType, modelName),
+                                file=graph_file)
+
+                            # Yaw resolves ambiguous connected vertices
+                            cell_to_yaw[(iy, ix)] = yawDegrees
+                            cell_to_iv[(iy, ix)] = iv
+                            cell_to_mesh[(iy, ix)] = modelType
+                         
+                            # Assumption: Leftmost column has only one cell,
+                            #   the start cell connected to base station
+                            if ix == 0:
+                                iv_start_tile = iv
+                                iv_start_type = modelType
+
 
     print_world_bottom(args, world_file=world_file)
 
