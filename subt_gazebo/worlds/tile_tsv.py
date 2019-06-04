@@ -254,12 +254,17 @@ def check_main():
     vert_fmt_base = '  %s   [label="%s::%s::BaseStation"];'
     vert_fmt = '  %-3d [label="%d::%s::%s"];'
     # vert1_id, vert2_id, edge_cost
-    edge_fmt = '  %d -- %d [label=%d];%s'
+    edge_fmt = '  %-2s -- %-3d [label=%d];%s'
 
     # (iy, ix): iv
     cell_to_iv = dict()
     cell_to_mesh = dict()
     cell_to_yaw = dict()
+
+    # Keep a sorted list of vertex indices. This makes output prettier.
+    # [(iy, ix), ...]
+    iyx = []
+
 
     BASE_MESH = 'base_station'
     base_symbol = 'S'
@@ -297,6 +302,8 @@ graph {
                             print(vert_fmt % (iv, iv, modelType, modelName),
                                 file=graph_file)
 
+                            iyx.append ((iy, ix))
+
                             # Yaw resolves ambiguous connected vertices
                             cell_to_yaw[(iy, ix)] = yawDegrees
                             cell_to_iv[(iy, ix)] = iv
@@ -308,7 +315,94 @@ graph {
                                 iv_start_tile = iv
                                 iv_start_type = modelType
 
+    print('''
+  /* ==== Edges ==== */
 
+  /* Base station */''', file=graph_file)
+    # Base station (vertex base_symbol) to start tunnel tile
+    print(edge_fmt % (base_symbol, iv_start_tile, GraphRules.calc_edge_cost(BASE_MESH,
+        iv_start_type), ''), file=graph_file)
+
+    y, x = zip(*iyx)
+
+    # Tile the array to n x n, then use vectorized subtraction
+    yt = np.tile(y, (len(y), 1))
+    xt = np.tile(x, (len(x), 1))
+    dy = np.abs (yt - yt.T)
+    dx = np.abs (xt - xt.T)
+
+    dy = np.triu(dy)
+    dx = np.triu(dx)
+
+    # Indices of adjacent tiles r and c
+    # Take upper triangle, to eliminate symmetric duplicates
+    # Horizontal and vertical neighbors are adjacent, i.e. exactly one of dx
+    #   and dy is 1.
+    adjy1 = np.array(dy == 1)
+    adjy0 = np.array(dy == 0)
+    adjx1 = np.array(dx == 1)
+    adjx0 = np.array(dx == 0)
+
+    # Test (dy == 1 and dx == 0) or (dy == 0 and dx == 1)
+    adj_r, adj_c = np.where(np.logical_or(np.logical_and(adjy1, adjx0),
+      np.logical_and(adjy0, adjx1)))
+
+    # For each pair of adjacent cells
+    for t1, t2 in zip(adj_r, adj_c):
+        # Unique vertex (tile) IDs
+        iv1 = cell_to_iv[y[t1], x[t1]]
+        iv2 = cell_to_iv[y[t2], x[t2]]
+        mesh1 = cell_to_mesh[y[t1], x[t1]]
+        mesh2 = cell_to_mesh[y[t2], x[t2]]
+
+
+        # Resolve ambiguities in connectivity, e.g. 2 x 2 blocks in tsv
+
+        is_connected = True
+
+        # Constraint rule 1
+        check_corner = False
+        # Set corner tile as reference tile, subtract reference tile
+        if mesh1 == GraphRules.CORNER_TILE:
+            cdy = y[t2] - y[t1]
+            cdx = x[t2] - x[t1]
+            cy = y[t1]
+            cx = x[t1]
+            check_corner = True
+        elif mesh2 == GraphRules.CORNER_TILE:
+            cdy = y[t1] - y[t2]
+            cdx = x[t1] - x[t2]
+            cy = y[t2]
+            cx = x[t2]
+            check_corner = True
+        if check_corner:
+            is_connected = GraphRules.check_corner_tile_connection(
+                cdy, cdx, cell_to_yaw[cy, cx])
+
+        # Currently removing blocker from topological graph
+        # Constraint rule 2: consecutive blockers can't be connected
+        #if mesh1 == GraphRules.BLOCKER_TILE and \
+        #    mesh2 == GraphRules.BLOCKER_TILE:
+        #    is_connected = False
+
+        # Constraint rule 3: parallel non-intersecting linear tiles aren't nbrs
+        if mesh1 in GraphRules.LINEAR_TILES and \
+            mesh2 in GraphRules.LINEAR_TILES:
+            is_connected = GraphRules.check_linear_tile_connection(
+                y[t1], x[t1], cell_to_yaw[y[t1], x[t1]],
+                y[t2], x[t2], cell_to_yaw[y[t2], x[t2]])
+
+        if is_connected:
+            cmt = ''
+            if mesh1 in GraphRules.intersections:
+                cmt = '  /* Intersection */'
+            print(edge_fmt % (iv1, iv2, GraphRules.calc_edge_cost(mesh1, mesh2),
+              cmt), file=graph_file)
+        else:
+            print('DEBUG: Ambiguity resolved: tile %s (%d) and %s (%d) not connected' % (
+                mesh1, iv1, mesh2, iv2), file=sys.stderr)
+
+    print_graph_bottom(args, graph_file=graph_file)
     print_world_bottom(args, world_file=world_file)
 
     if len(args.world_file) > 0:
@@ -316,6 +410,9 @@ graph {
 
     if len(args.graph_file) > 0:
         graph_file.close()
+
+def print_graph_bottom(args, graph_file):
+    print('}', file=graph_file)
 
 def print_world_bottom(args, world_file=sys.stdout):
     global plugin_artifacts
