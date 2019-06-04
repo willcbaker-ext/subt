@@ -10,8 +10,7 @@ tunnel_tile_name_counter = 0
 artifact_name_counter = {}
 plugin_artifacts = ''
 
-def model_include_string(tileNamePrefix, modelType,
-                         pose_x, pose_y, pose_z, pose_yaw):
+def generate_model_name(tileNamePrefix, modelType):
     if 'tunnel_tile_' in modelType:
         global tunnel_tile_name_counter
         modelName = tileNamePrefix + "_" + str(tunnel_tile_name_counter)
@@ -29,6 +28,10 @@ def model_include_string(tileNamePrefix, modelType,
         <name>%s</name>
         <type>TYPE_%s</type>
       </artifact>""" % (modelName, model_type.upper())
+    return modelName
+
+def model_include_string(modelName, modelType,
+                         pose_x, pose_y, pose_z, pose_yaw):
     return """    <include>
       <name>%s</name>
       <uri>model://%s</uri>
@@ -37,22 +40,6 @@ def model_include_string(tileNamePrefix, modelType,
 """ % (modelName, modelType,
                      float(pose_x), float(pose_y), float(pose_z),
                      float(pose_yaw))
-
-def print_tsv_model_includes(args, world_file=sys.stdout):
-    with open(args.file_name, 'rt') as tsvfile:
-        spamreader = csv.reader(tsvfile, delimiter='\t')
-        for iy, row in enumerate(spamreader):
-            for ix, cell in enumerate(row):
-                if (len(cell) > 0):
-                    for parts in csv.reader([cell]):
-                        modelType = parts[0]
-                        yawDegrees = float(parts[1])
-                        z_level = float(parts[2])
-                        print(model_include_string("tile", modelType,
-                                         args.x0 + ix*args.scale_x,
-                                         args.y0 - iy*args.scale_y,
-                                         args.z0 + z_level*args.scale_z,
-                                         yawDegrees * math.pi / 180), file=world_file)
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(
@@ -118,6 +105,7 @@ def print_world_top(args, world_file):
 
 def check_main():
     args = parse_args(sys.argv)
+
     if len(args.world_file) > 0:
         world_file = open(args.world_file, 'w')
     else:
@@ -130,7 +118,23 @@ def check_main():
 
     print_world_top(args, world_file=world_file)
 
-    print_tsv_model_includes(args, world_file=world_file)
+    # read from tsv spreadsheet file
+    with open(args.file_name, 'rt') as tsvfile:
+        spamreader = csv.reader(tsvfile, delimiter='\t')
+        for iy, row in enumerate(spamreader):
+            for ix, cell in enumerate(row):
+                if (len(cell) > 0):
+                    for parts in csv.reader([cell]):
+                        modelType = parts[0]
+                        yawDegrees = float(parts[1])
+                        z_level = float(parts[2])
+                        modelName = generate_model_name("tile", modelType)
+                        print(model_include_string(modelName, modelType,
+                                         args.x0 + ix*args.scale_x,
+                                         args.y0 - iy*args.scale_y,
+                                         args.z0 + z_level*args.scale_z,
+                                         yawDegrees * math.pi / 180),
+                                         file=world_file)
 
     print_world_bottom(args, world_file=world_file)
 
