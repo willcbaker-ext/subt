@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+
 from __future__ import print_function
 import argparse
 import csv
 import math
+import numpy as np
 import os
 import sys
 
@@ -41,11 +43,132 @@ def model_include_string(modelName, modelType,
                      float(pose_x), float(pose_y), float(pose_z),
                      float(pose_yaw))
 
+class GraphRules:
+
+    # For computing edge cost
+    STRAIGHT = 0
+    TURN = 1
+    # Key: tile mesh name
+    tile_straightness = {
+        'base_station': STRAIGHT,
+        'tunnel_tile_1': TURN,
+        'tunnel_tile_2': TURN,
+        'tunnel_tile_3': TURN,
+        'tunnel_tile_4': TURN,
+        'tunnel_tile_5': STRAIGHT,
+        'tunnel_tile_6': STRAIGHT,
+        'tunnel_tile_7': TURN,
+        'tunnel_tile_blocker': STRAIGHT,
+        'constrained_tunnel_tile_tall': STRAIGHT,
+        'constrained_tunnel_tile_short': STRAIGHT}
+
+    # For comments in .dot
+    intersections = ['tunnel_tile_1', 'tunnel_tile_4']
+
+    # Assumption to constraints: tsv file is a valid tunnel system.
+    #     Currently only checking ambiguous cases in a valid tsv specification.
+    # Constraint rule 1:
+    # Yaw of 90-degree corner tile resolves ambiguous edges e.g. when
+    #     all cells in a 2 x 2 block in tsv are occupied
+    CORNER_TILE = 'tunnel_tile_2'
+    # Constraint rule 2: consecutive blockers cannot be connected
+    BLOCKER_TILE = 'tunnel_tile_blocker'
+    # Constraint rule 3: parallel non-intersecting (not on same line) linear
+    #     tiles cannot be connected. Check yaw to determine connection.
+    LINEAR_TILES = ['tunnel_tile_5', 'tunnel_tile_6', 'tunnel_tile_7',
+        'constrained_tunnel_tile_tall', 'constrained_tunnel_tile_short']
+
+    # Ignored in scene graph
+    artifacts = ['Backpack', 'Electrical Box', 'Extinguisher', 'Phone',
+        'Radio', 'Survivor Female', 'Survivor Male', 'Toolbox', 'Valve',
+        BLOCKER_TILE]
+
+
+    @classmethod
+    def calc_edge_cost(self, mesh1, mesh2):
+        try:
+            # Heuristic: if both tiles are straight, cost 1;
+            #   if both are turns, cost 6;
+            #   otherwise (one is straight, one is a turn), cost 3.
+            if self.tile_straightness[mesh1] == self.STRAIGHT and \
+                self.tile_straightness[mesh2] == self.STRAIGHT:
+                return 1
+            elif self.tile_straightness[mesh1] == self.TURN and \
+                self.tile_straightness[mesh2] == self.TURN:
+                return 6
+            else:
+                return 3
+        except KeyError:
+            if mesh1 in self.artifacts or mesh2 in self.artifacts:
+                return 0
+            else:
+                raise
+
+
+    # Constraint rule 1: corner tile yaw degrees
+    #     cdy, cdx: current dy and dx, of cell indices in tsv, with respect to
+    #         corner tile.
+    @classmethod
+    def check_corner_tile_connection(self, cdy, cdx, yaw):
+
+        is_connected = True
+
+        # Hardcoded based on corner tile mesh
+        # Yaw degrees are with reference to the corner tile
+        # yaw 0, neighbors are necessarily in cells (y=0, x=+1) or (+1, 0)
+        #     (right, below)
+        if abs (yaw - 0) < 1e-6:
+            if not ((cdy == 0 and cdx == 1) or (cdy == 1 and cdx == 0)):
+                is_connected = False
+        # yaw 90, neighbors are necessarily in cells (0, +1) or (-1, 0)
+        #     (right, above)
+        elif abs (yaw - 90) < 1e-6:
+            if not ((cdy == 0 and cdx == 1) or (cdy == -1 and cdx == 0)):
+                is_connected = False
+        # yaw 180, neighbors are necessarily in cells (0, -1) or (-1, 0)
+        #     (left, above)
+        elif abs (yaw - 180) < 1e-6:
+            if not ((cdy == 0 and cdx == -1) or (cdy == -1 and cdx == 0)):
+                is_connected = False
+        # yaw 270 (or -90), neighbors are necessarily in cells (0, -1) or
+        #   (+1, 0) (left, below)
+        elif abs (yaw - 270) < 1e-6 or abs (yaw + 90) < 1e-6:
+            if not ((cdy == 0 and cdx == -1) or (cdy == 1 and cdx == 0)):
+                is_connected = False
+
+        return is_connected
+
+
+    @classmethod
+    def check_linear_tile_connection(self, y1, x1, yaw1, y2, x2, yaw2):
+
+        # Hardcoded assumption on meshes:
+        # Linear tile meshes are vertical (parallel to world y) at yaw 0,
+        #     horizontal (parallel to world x) at yaw 90.
+
+        offset = abs(yaw2 - yaw1)
+        # Require consecutive linear tiles to be parallel
+        if not (abs(offset - 0) < 1e-6 or abs(offset - 180) < 1e-6):
+            return False
+
+        # Require consecutive parallel linear tiles to be on same line.
+        #     yaw 0: x1 == x2 (same tsv column) required.
+        #     yaw 90: y1 == y2 (same tsv row) required.
+        if abs(yaw1 - 0) < 1e-6 or abs(yaw1 - 180) < 1e-6:
+            if x1 != x2:
+                return False
+        elif abs(yaw1 - 90) < 1e-6 or abs(yaw1 - 270) < 1e-6:
+            if y1 != y2:
+                return False
+
+        return True
+
+
 def parse_args(argv):
     parser = argparse.ArgumentParser(
         'Generate tiled world and connectivity graph files from tsv. '
         'The graph file is not written if the --graph-file argument is not specified.')
-    parser.add_argument('file_name', help='name of tsv file to read')
+    parser.add_argument('tsv_name', help='name of tsv file to read')
     parser.add_argument('--world-name', dest='world_name', type=str, default='default', help='world name')
     parser.add_argument('--world-file', dest='world_file', type=str, default='', help='world output file')
     parser.add_argument('--graph-file', dest='graph_file', type=str, default='', help='dot graph output file')
@@ -64,7 +187,7 @@ def parse_args(argv):
 def print_world_top(args, world_file):
     print("""<?xml version="1.0" ?>
 <!--
-  Generated with the tile_tsv.py script:
+  Generated with the %s script:
     %s
 -->
 <sdf version="1.6">
@@ -101,7 +224,14 @@ def print_world_top(args, world_file):
 
 
     <!-- Tunnel tiles and artifacts -->""" %
-  (' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+  (__file__, ' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+
+def print_graph_top(args, graph_file):
+    print('''/* Visibility graph for %s
+   Generated with the %s script:
+     %s */''' % (
+        args.tsv_name, __file__, ' '.join(sys.argv).replace('--', '-\-')),
+        file=graph_file)
 
 def check_main():
     args = parse_args(sys.argv)
@@ -114,12 +244,13 @@ def check_main():
     if len(args.graph_file) > 0:
         graph_file = open(args.graph_file, 'w')
     else:
-        graph_file = os.devnull
+        graph_file = open(os.devnull, 'w')
 
+    print_graph_top(args, graph_file=graph_file)
     print_world_top(args, world_file=world_file)
 
     # read from tsv spreadsheet file
-    with open(args.file_name, 'rt') as tsvfile:
+    with open(args.tsv_name, 'rt') as tsvfile:
         spamreader = csv.reader(tsvfile, delimiter='\t')
         for iy, row in enumerate(spamreader):
             for ix, cell in enumerate(row):
