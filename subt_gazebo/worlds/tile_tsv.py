@@ -55,10 +55,13 @@ def print_tsv_model_includes(args, world_file=sys.stdout):
                                          yawDegrees * math.pi / 180), file=world_file)
 
 def parse_args(argv):
-    parser = argparse.ArgumentParser('Generate tiled world file from tsv.')
+    parser = argparse.ArgumentParser(
+        'Generate tiled world and connectivity graph files from tsv. '
+        'The graph file is not written if the --graph-file argument is not specified.')
     parser.add_argument('file_name', help='name of tsv file to read')
     parser.add_argument('--world-name', dest='world_name', type=str, default='default', help='world name')
     parser.add_argument('--world-file', dest='world_file', type=str, default='', help='world output file')
+    parser.add_argument('--graph-file', dest='graph_file', type=str, default='', help='dot graph output file')
     parser.add_argument('--x0', dest='x0', type=float, default=0, help='origin X coordinate')
     parser.add_argument('--y0', dest='y0', type=float, default=0, help='origin Y coordinate')
     parser.add_argument('--z0', dest='z0', type=float, default=0, help='origin Z coordinate')
@@ -77,6 +80,11 @@ def check_main():
         world_file = open(args.world_file, 'w')
     else:
         world_file = sys.stdout
+
+    if len(args.graph_file) > 0:
+        graph_file = open(args.graph_file, 'w')
+    else:
+        graph_file = os.devnull
 
     print("""<?xml version="1.0" ?>
 <!--
@@ -201,6 +209,12 @@ def check_main():
   </world>
 </sdf>""" %
 (args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z), file=world_file)
+
+    if len(args.world_file) > 0:
+        world_file.close()
+
+    if len(args.graph_file) > 0:
+        graph_file.close()
         
 if __name__ == '__main__':
     check_main()
