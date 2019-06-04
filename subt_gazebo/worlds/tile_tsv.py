@@ -38,7 +38,7 @@ def model_include_string(tileNamePrefix, modelType,
                      float(pose_x), float(pose_y), float(pose_z),
                      float(pose_yaw))
 
-def print_tsv_model_includes(args):
+def print_tsv_model_includes(args, world_file=sys.stdout):
     with open(args.file_name, 'rt') as tsvfile:
         spamreader = csv.reader(tsvfile, delimiter='\t')
         for iy, row in enumerate(spamreader):
@@ -52,12 +52,13 @@ def print_tsv_model_includes(args):
                                          args.x0 + ix*args.scale_x,
                                          args.y0 - iy*args.scale_y,
                                          args.z0 + z_level*args.scale_z,
-                                         yawDegrees * math.pi / 180))
+                                         yawDegrees * math.pi / 180), file=world_file)
 
 def parse_args(argv):
     parser = argparse.ArgumentParser('Generate tiled world file from tsv.')
     parser.add_argument('file_name', help='name of tsv file to read')
     parser.add_argument('--world-name', dest='world_name', type=str, default='default', help='world name')
+    parser.add_argument('--world-file', dest='world_file', type=str, default='', help='world output file')
     parser.add_argument('--x0', dest='x0', type=float, default=0, help='origin X coordinate')
     parser.add_argument('--y0', dest='y0', type=float, default=0, help='origin Y coordinate')
     parser.add_argument('--z0', dest='z0', type=float, default=0, help='origin Z coordinate')
@@ -72,6 +73,11 @@ def parse_args(argv):
 
 def check_main():
     args = parse_args(sys.argv)
+    if len(args.world_file) > 0:
+        world_file = open(args.world_file, 'w')
+    else:
+        world_file = sys.stdout
+
     print("""<?xml version="1.0" ?>
 <!--
   Generated with the tile_tsv.py script:
@@ -111,8 +117,8 @@ def check_main():
 
 
     <!-- Tunnel tiles and artifacts -->""" %
-  (' '.join(sys.argv).replace('--', '-\-'), args.world_name))
-    print_tsv_model_includes(args)
+  (' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+    print_tsv_model_includes(args, world_file=world_file)
     global plugin_artifacts
     print("""
     <!-- The SubT challenge logic plugin -->
@@ -194,7 +200,7 @@ def check_main():
 
   </world>
 </sdf>""" %
-(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z))
+(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z), file=world_file)
         
 if __name__ == '__main__':
     check_main()
