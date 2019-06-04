@@ -74,18 +74,7 @@ def parse_args(argv):
     args = parser.parse_args()
     return args
 
-def check_main():
-    args = parse_args(sys.argv)
-    if len(args.world_file) > 0:
-        world_file = open(args.world_file, 'w')
-    else:
-        world_file = sys.stdout
-
-    if len(args.graph_file) > 0:
-        graph_file = open(args.graph_file, 'w')
-    else:
-        graph_file = os.devnull
-
+def print_world_top(args, world_file):
     print("""<?xml version="1.0" ?>
 <!--
   Generated with the tile_tsv.py script:
@@ -126,7 +115,32 @@ def check_main():
 
     <!-- Tunnel tiles and artifacts -->""" %
   (' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+
+def check_main():
+    args = parse_args(sys.argv)
+    if len(args.world_file) > 0:
+        world_file = open(args.world_file, 'w')
+    else:
+        world_file = sys.stdout
+
+    if len(args.graph_file) > 0:
+        graph_file = open(args.graph_file, 'w')
+    else:
+        graph_file = os.devnull
+
+    print_world_top(args, world_file=world_file)
+
     print_tsv_model_includes(args, world_file=world_file)
+
+    print_world_bottom(args, world_file=world_file)
+
+    if len(args.world_file) > 0:
+        world_file.close()
+
+    if len(args.graph_file) > 0:
+        graph_file.close()
+
+def print_world_bottom(args, world_file=sys.stdout):
     global plugin_artifacts
     print("""
     <!-- The SubT challenge logic plugin -->
@@ -208,14 +222,8 @@ def check_main():
 
   </world>
 </sdf>""" %
-(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z), file=world_file)
+    (args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z), file=world_file)
 
-    if len(args.world_file) > 0:
-        world_file.close()
-
-    if len(args.graph_file) > 0:
-        graph_file.close()
-        
 if __name__ == '__main__':
     check_main()
 
