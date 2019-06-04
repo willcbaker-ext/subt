@@ -121,7 +121,7 @@ graph {
   /* ==== Edges ==== */
 
   /* Base station */
-  4  -- 60  [label=1];
+  S  -- 60  [label=1];
 
   60 -- 61  [label=1];
   61 -- 62  [label=1];
