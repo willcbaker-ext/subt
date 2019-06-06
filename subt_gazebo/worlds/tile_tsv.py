@@ -38,25 +38,9 @@ def model_include_string(tileNamePrefix, modelType,
                      float(pose_x), float(pose_y), float(pose_z),
                      float(pose_yaw))
 
-def print_tsv_model_includes(args, world_file=sys.stdout):
-    with open(args.file_name, 'rt') as tsvfile:
-        spamreader = csv.reader(tsvfile, delimiter='\t')
-        for iy, row in enumerate(spamreader):
-            for ix, cell in enumerate(row):
-                if (len(cell) > 0):
-                    for parts in csv.reader([cell]):
-                        modelType = parts[0]
-                        yawDegrees = float(parts[1])
-                        z_level = float(parts[2])
-                        print(model_include_string("tile", modelType,
-                                         args.x0 + ix*args.scale_x,
-                                         args.y0 - iy*args.scale_y,
-                                         args.z0 + z_level*args.scale_z,
-                                         yawDegrees * math.pi / 180), file=world_file)
-
 def parse_args(argv):
     parser = argparse.ArgumentParser('Generate tiled world file from tsv.')
-    parser.add_argument('file_name', help='name of tsv file to read')
+    parser.add_argument('tsv_name', help='name of tsv file to read')
     parser.add_argument('--world-name', dest='world_name', type=str, default='default', help='world name')
     parser.add_argument('--world-file', dest='world_file', type=str, default='', help='world output file')
     parser.add_argument('--x0', dest='x0', type=float, default=0, help='origin X coordinate')
@@ -123,7 +107,21 @@ def check_main():
 
     print_world_top(args, world_file=world_file)
 
-    print_tsv_model_includes(args, world_file=world_file)
+    with open(args.tsv_name, 'rt') as tsvfile:
+        spamreader = csv.reader(tsvfile, delimiter='\t')
+        for iy, row in enumerate(spamreader):
+            for ix, cell in enumerate(row):
+                if (len(cell) > 0):
+                    for parts in csv.reader([cell]):
+                        modelType = parts[0]
+                        yawDegrees = float(parts[1])
+                        z_level = float(parts[2])
+                        print(model_include_string("tile", modelType,
+                                         args.x0 + ix*args.scale_x,
+                                         args.y0 - iy*args.scale_y,
+                                         args.z0 + z_level*args.scale_z,
+                                         yawDegrees * math.pi / 180),
+                                         file=world_file)
 
     print_world_bottom(args, world_file=world_file)
 
