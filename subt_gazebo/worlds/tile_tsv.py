@@ -74,7 +74,7 @@ def parse_args(argv):
 def print_world_top(args, world_file):
     print("""<?xml version="1.0" ?>
 <!--
-  Generated with the tile_tsv.py script:
+  Generated with the %s script:
     %s
 -->
 <sdf version="1.6">
@@ -111,10 +111,11 @@ def print_world_top(args, world_file):
 
 
     <!-- Tunnel tiles and artifacts -->""" %
-  (' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+    (__file__, ' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
 
 def check_main():
     args = parse_args(sys.argv)
+
     if len(args.world_file) > 0:
         world_file = open(args.world_file, 'w')
     else:
