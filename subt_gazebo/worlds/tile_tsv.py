@@ -225,7 +225,7 @@ def print_world_top(args, world_file):
 
 
     <!-- Tunnel tiles and artifacts -->""" %
-  (__file__, ' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+    (__file__, ' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
 
 def print_graph_top(args, graph_file):
     print('''/* Visibility graph for %s
