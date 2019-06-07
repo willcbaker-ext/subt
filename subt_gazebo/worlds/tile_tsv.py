@@ -134,13 +134,22 @@ def check_main():
                         # submodels are separated by `;` eg. 'Phone;tunnel_tile_blocker'
                         # a relative pose can be specified with @
                         # pose is specified like in sdformat but with angles in degrees
-                        # eg. 'Phone@0 0 0.004 90 0 0;tunnel_tile_blocker@11 0 0 0 0 0 0'
+                        # eg. 'Phone@0 0 0.004 90 0 0;tunnel_tile_blocker@11 0 0 0 0 0'
                         if len(parts) > 3:
                             submodels = parts[3]
                             for submodel in submodels.split(';'):
                                 pose_xi = pose_x
                                 pose_yi = pose_y
                                 pose_zi = pose_z
+                                # pose_roll and pose_pitch are printed as strings for now
+                                # to minimize the diff for tunnel_qual.world
+                                # which has a bunch of poses with no trailing zeros for roll and pitch
+                                # like '100.0000 200.0000 0.0000 0 0 -1.57079'
+                                # so let pose_roll and pose_pitch default to '0'
+                                pose_roll = '0'
+                                pose_pitch = '0'
+                                pose_yaw = 0.0
+                                # separate name from pose string by splitting at `@`
                                 submodelType = ''
                                 poseStr = ''
                                 submodelType_poseStr = submodel.split('@')
@@ -159,13 +168,10 @@ def check_main():
                                     pose_zi += float(pose[2])
                                 # additionally set roll, pitch, yaw if 6 values are given
                                 if len(pose) == 6:
-                                    # these are some weird tricks to minimize the diff for tunnel_qual.world
-                                    # which has a bunch of poses with no trailing zeros for roll and pitch
-                                    # like '100.0000 200.0000 0.0000 0 0 -5.0000'
-                                    pose_roll = '0'
+                                    # print pose_roll and pose_pitch as %f if
+                                    # they aren't exactly '0'
                                     if pose_roll != pose[3]:
                                         pose_roll = '%f' % (float(pose[3]) * math.pi / 180)
-                                    pose_pitch = '0'
                                     if pose_pitch != pose[4]:
                                         pose_pitch = '%f' % (float(pose[4]) * math.pi / 180)
                                     pose_yaw = float(pose[5]) * math.pi / 180
