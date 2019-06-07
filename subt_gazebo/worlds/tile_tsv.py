@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-from __future__ import print_function
+#!/usr/bin/env python3
+
 import argparse
 import csv
 import math
@@ -38,26 +38,11 @@ def model_include_string(tileNamePrefix, modelType,
                      float(pose_x), float(pose_y), float(pose_z),
                      float(pose_yaw))
 
-def print_tsv_model_includes(args):
-    with open(args.file_name, 'rb') as tsvfile:
-        spamreader = csv.reader(tsvfile, delimiter='\t')
-        for iy, row in enumerate(spamreader):
-            for ix, cell in enumerate(row):
-                if (len(cell) > 0):
-                    for parts in csv.reader([cell]):
-                        modelType = parts[0]
-                        yawDegrees = float(parts[1])
-                        z_level = float(parts[2])
-                        print(model_include_string("tile", modelType,
-                                         args.x0 + ix*args.scale_x,
-                                         args.y0 - iy*args.scale_y,
-                                         args.z0 + z_level*args.scale_z,
-                                         yawDegrees * math.pi / 180))
-
 def parse_args(argv):
     parser = argparse.ArgumentParser('Generate tiled world file from tsv.')
-    parser.add_argument('file_name', help='name of tsv file to read')
+    parser.add_argument('tsv_name', help='name of tsv file to read')
     parser.add_argument('--world-name', dest='world_name', type=str, default='default', help='world name')
+    parser.add_argument('--world-file', dest='world_file', type=str, default='', help='world output file')
     parser.add_argument('--x0', dest='x0', type=float, default=0, help='origin X coordinate')
     parser.add_argument('--y0', dest='y0', type=float, default=0, help='origin Y coordinate')
     parser.add_argument('--z0', dest='z0', type=float, default=0, help='origin Z coordinate')
@@ -70,11 +55,10 @@ def parse_args(argv):
     args = parser.parse_args()
     return args
 
-def check_main():
-    args = parse_args(sys.argv)
+def print_world_top(args, world_file):
     print("""<?xml version="1.0" ?>
 <!--
-  Generated with the tile_tsv.py script:
+  Generated with the %s script:
     %s
 -->
 <sdf version="1.6">
@@ -111,8 +95,40 @@ def check_main():
 
 
     <!-- Tunnel tiles and artifacts -->""" %
-  (' '.join(sys.argv).replace('--', '-\-'), args.world_name))
-    print_tsv_model_includes(args)
+    (__file__, ' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
+
+def check_main():
+    args = parse_args(sys.argv)
+
+    if len(args.world_file) > 0:
+        world_file = open(args.world_file, 'w')
+    else:
+        world_file = sys.stdout
+
+    print_world_top(args, world_file=world_file)
+
+    with open(args.tsv_name, 'rt') as tsvfile:
+        spamreader = csv.reader(tsvfile, delimiter='\t')
+        for iy, row in enumerate(spamreader):
+            for ix, cell in enumerate(row):
+                if (len(cell) > 0):
+                    for parts in csv.reader([cell]):
+                        modelType = parts[0]
+                        yawDegrees = float(parts[1])
+                        z_level = float(parts[2])
+                        print(model_include_string("tile", modelType,
+                                         args.x0 + ix*args.scale_x,
+                                         args.y0 - iy*args.scale_y,
+                                         args.z0 + z_level*args.scale_z,
+                                         yawDegrees * math.pi / 180),
+                                         file=world_file)
+
+    print_world_bottom(args, world_file=world_file)
+
+    if len(args.world_file) > 0:
+        world_file.close()
+
+def print_world_bottom(args, world_file=sys.stdout):
     global plugin_artifacts
     print("""
     <!-- The SubT challenge logic plugin -->
@@ -127,15 +143,26 @@ def check_main():
     <!-- The SubT comms broker plugin -->
     <plugin name="comms_broker_plugin" filename="libCommsBrokerPlugin.so">
       <comms_model>
-        <neighbor_distance_min>0.0</neighbor_distance_min>
-        <neighbor_distance_max>100.0</neighbor_distance_max>
-        <comms_distance_min>0.0</comms_distance_min>
-        <comms_distance_max>100.0</comms_distance_max>
-        <comms_drop_probability_min>0.0</comms_drop_probability_min>
-        <comms_drop_probability_max>0.0</comms_drop_probability_max>
-        <comms_outage_probability>0.0</comms_outage_probability>
-        <comms_outage_duration_min>0.0</comms_outage_duration_min>
-        <comms_outage_duration_max>10.0</comms_outage_duration_max>
+        <comms_model_type>visibility_range</comms_model_type>
+
+        <range_config>
+          <max_range>500.0</max_range>
+          <fading_exponent>2.5</fading_exponent>
+          <L0>40</L0>
+          <sigma>10.0</sigma>
+        </range_config>
+
+        <visibility_config>
+          <visibility_cost_to_fading_exponent>0.2</visibility_cost_to_fading_exponent>
+          <comms_cost_max>15</comms_cost_max>
+        </visibility_config>
+
+        <radio_config>
+          <capacity>1000000</capacity>
+          <tx_power>20</tx_power>
+          <noise_floor>-90</noise_floor>
+          <modulation>QPSK</modulation>
+        </radio_config>
       </comms_model>
     </plugin>
 
@@ -183,8 +210,8 @@ def check_main():
 
   </world>
 </sdf>""" %
-(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z))
-        
+    (args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z), file=world_file)
+
 if __name__ == '__main__':
     check_main()
 
