@@ -1,11 +1,12 @@
-
-/* Visibility graph for tunnel_qual.world */
+/* Visibility graph for tunnel_qual.tsv
+   Generated with the tile_tsv.py script:
+     tile_tsv.py tunnel_qual.tsv -\-world-name tunnel_qual -\-x0 20 -\-y0 240 -\-z0 -10 -\-world-file tunnel_qual.world -\-graph-file tunnel_qual.dot */
 
 graph {
   /* ==== Vertices ==== */
 
-  /* Base station / Staging area*/
-  4   [label="4::base_station::BaseStation"];
+  /* Base station / Staging area */
+  S   [label="S::base_station::BaseStation"];
 
   0   [label="0::tunnel_tile_2::tile_0"];
   1   [label="1::tunnel_tile_5::tile_1"];
@@ -83,7 +84,7 @@ graph {
   83  [label="83::tunnel_tile_2::tile_83"];
   84  [label="84::tunnel_tile_5::tile_84"];
   85  [label="85::tunnel_tile_2::tile_85"];
-  86  [label="86::tunnel_tile_2::tile_86"];
+  86  [label="86::tunnel_tile_5::tile_86"];
   87  [label="87::tunnel_tile_5::tile_87"];
   88  [label="88::tunnel_tile_5::tile_88"];
   89  [label="89::tunnel_tile_5::tile_89"];
@@ -120,7 +121,7 @@ graph {
   /* ==== Edges ==== */
 
   /* Base station */
-  4  -- 60  [label=1];
+  S  -- 60  [label=1];
 
   60 -- 61  [label=1];
   61 -- 62  [label=1];
@@ -247,22 +248,22 @@ graph {
   97 -- 98  [label=6];
   98 -- 99  [label=6];
   99 -- 100 [label=3];
-  100-- 101 [label=1];
-  101-- 102 [label=3];
-  102-- 104 [label=3];
-  104-- 106 [label=1];
-  106-- 112 [label=3];
-  112-- 113 [label=6];
-  113-- 107 [label=6];
-  107-- 108 [label=3];
-  108-- 109 [label=1];
-  109-- 110 [label=3];
-  110-- 114 [label=3];
-  114-- 116 [label=3];
-  116-- 117 [label=3];
-  117-- 118 [label=1];
-  118-- 119 [label=3];
-  119-- 115 [label=3];
-  115-- 111 [label=1];
-  111-- 105 [label=1];
+  100 -- 101 [label=1];
+  101 -- 102 [label=1];
+  102 -- 104 [label=1];
+  104 -- 106 [label=1];
+  106 -- 112 [label=3];
+  112 -- 113 [label=6];
+  113 -- 107 [label=6];
+  107 -- 108 [label=3];
+  108 -- 109 [label=1];
+  109 -- 110 [label=3];
+  110 -- 114 [label=3];
+  114 -- 116 [label=3];
+  116 -- 117 [label=3];
+  117 -- 118 [label=1];
+  118 -- 119 [label=3];
+  119 -- 115 [label=3];
+  115 -- 111 [label=1];
+  111 -- 105 [label=1];
 }

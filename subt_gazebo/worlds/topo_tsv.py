@@ -310,7 +310,7 @@ graph {
               cmt), file=outfile)
         else:
             print('DEBUG: Ambiguity resolved: tile %s (%d) and %s (%d) not connected' % (
-                mesh1, iv1, mesh2, iv2))
+                mesh1, iv1, mesh2, iv2), file=sys.stderr)
 
     print('}', file=outfile)
 
