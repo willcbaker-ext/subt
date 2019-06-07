@@ -11,7 +11,8 @@ artifact_name_counter = {}
 plugin_artifacts = ''
 
 def model_include_string(tileNamePrefix, modelType,
-                         pose_x, pose_y, pose_z, pose_yaw):
+                         pose_x, pose_y, pose_z, pose_yaw,
+                         pose_roll='0', pose_pitch='0'):
     if 'tunnel_tile_' in modelType:
         global tunnel_tile_name_counter
         modelName = tileNamePrefix + "_" + str(tunnel_tile_name_counter)
@@ -32,11 +33,11 @@ def model_include_string(tileNamePrefix, modelType,
     return """    <include>
       <name>%s</name>
       <uri>model://%s</uri>
-      <pose>%f %f %f 0 0 %f</pose>
+      <pose>%f %f %f %s %s %f</pose>
     </include>
 """ % (modelName, modelType,
                      float(pose_x), float(pose_y), float(pose_z),
-                     float(pose_yaw))
+                     pose_roll, pose_pitch, float(pose_yaw))
 
 def parse_args(argv):
     parser = argparse.ArgumentParser('Generate tiled world file from tsv.')
@@ -113,15 +114,67 @@ def check_main():
             for ix, cell in enumerate(row):
                 if (len(cell) > 0):
                     for parts in csv.reader([cell]):
+                        # each cell of spreadsheet contains comma-separated
+                        # value strings with at least 3 fields
+                        # modelType,yawDegrees,z_level eg. 'tunnel_tile_1,180,-1'
+                        # it can have more fields, which are described below
                         modelType = parts[0]
                         yawDegrees = float(parts[1])
                         z_level = float(parts[2])
+                        pose_x = args.x0 + ix*args.scale_x
+                        pose_y = args.y0 - iy*args.scale_y
+                        pose_z = args.z0 + z_level*args.scale_z
                         print(model_include_string("tile", modelType,
-                                         args.x0 + ix*args.scale_x,
-                                         args.y0 - iy*args.scale_y,
-                                         args.z0 + z_level*args.scale_z,
+                                         pose_x, pose_y, pose_z,
                                          yawDegrees * math.pi / 180),
                                          file=world_file)
+                        # the 4th field is another string that contains a list
+                        # of submodels and a relative pose where they are to be
+                        # placed within the tile
+                        # submodels are separated by `;` eg. 'Phone;tunnel_tile_blocker'
+                        # a relative pose can be specified with @
+                        # pose is specified like in sdformat but with angles in degrees
+                        # eg. 'Phone@0 0 0.004 90 0 0;tunnel_tile_blocker@11 0 0 0 0 0 0'
+                        if len(parts) > 3:
+                            submodels = parts[3]
+                            for submodel in submodels.split(';'):
+                                pose_xi = pose_x
+                                pose_yi = pose_y
+                                pose_zi = pose_z
+                                submodelType = ''
+                                poseStr = ''
+                                submodelType_poseStr = submodel.split('@')
+                                if len(submodelType_poseStr) == 0:
+                                    print("ERROR: invalid submodel specification %s" % submodel)
+                                    continue
+                                submodelType = submodelType_poseStr[0]
+                                # pose is optional
+                                if len(submodelType_poseStr) >= 2:
+                                    poseStr = submodelType_poseStr[1]
+                                pose = poseStr.split(' ')
+                                # set position if only 3 pose values are given
+                                if len(pose) >= 3:
+                                    pose_xi += float(pose[0])
+                                    pose_yi += float(pose[1])
+                                    pose_zi += float(pose[2])
+                                # additionally set roll, pitch, yaw if 6 values are given
+                                if len(pose) == 6:
+                                    # these are some weird tricks to minimize the diff for tunnel_qual.world
+                                    # which has a bunch of poses with no trailing zeros for roll and pitch
+                                    # like '100.0000 200.0000 0.0000 0 0 -5.0000'
+                                    pose_roll = '0'
+                                    if pose_roll != pose[3]:
+                                        pose_roll = '%f' % (float(pose[3]) * math.pi / 180)
+                                    pose_pitch = '0'
+                                    if pose_pitch != pose[4]:
+                                        pose_pitch = '%f' % (float(pose[4]) * math.pi / 180)
+                                    pose_yaw = float(pose[5]) * math.pi / 180
+                                print(model_include_string("tile", submodelType,
+                                                 pose_xi, pose_yi, pose_zi,
+                                                 pose_yaw * math.pi / 180,
+                                                 pose_roll=pose_roll,
+                                                 pose_pitch=pose_pitch),
+                                                 file=world_file)
 
     print_world_bottom(args, world_file=world_file)
 
