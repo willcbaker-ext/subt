@@ -144,17 +144,16 @@
 
 
     <!-- Tunnel tiles and artifacts -->
-
-    <include>
-      <name>phone_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Phone</uri>
-      <pose>230.000000 240.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
     <include>
       <name>tile_0</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>270.000000 240.000000 0.000000 0 0 0.000000</pose>
+    </include>
+
+    <include>
+      <name>radio_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Radio</uri>
+      <pose>272.000000 240.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -206,6 +205,12 @@
     </include>
 
     <include>
+      <name>backpack_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
+      <pose>229.000000 202.000000 0.000000 0 0 0.000000</pose>
+    </include>
+
+    <include>
       <name>tile_9</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
       <pose>270.000000 200.000000 0.000000 0 0 4.712389</pose>
@@ -215,6 +220,12 @@
       <name>tile_10</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Left</uri>
       <pose>310.000000 200.000000 0.000000 0 0 1.570796</pose>
+    </include>
+
+    <include>
+      <name>phone_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Phone</uri>
+      <pose>310.000000 200.000000 0.008000 -1.570796 0 0.000000</pose>
     </include>
 
     <include>
@@ -242,15 +253,15 @@
     </include>
 
     <include>
-      <name>tile_15</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
-      <pose>390.000000 179.000000 0.000000 0 0 0.000000</pose>
+      <name>toolbox_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Toolbox</uri>
+      <pose>390.000000 200.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
-      <name>backpack_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
-      <pose>150.000000 160.000000 0.000000 0 0 0.000000</pose>
+      <name>tile_15</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
+      <pose>390.000000 179.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -260,9 +271,9 @@
     </include>
 
     <include>
-      <name>radio_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Radio</uri>
-      <pose>270.000000 160.000000 0.000000 0 0 0.000000</pose>
+      <name>extinguisher_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Extinguisher</uri>
+      <pose>188.000000 160.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -326,27 +337,9 @@
     </include>
 
     <include>
-      <name>radio_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Radio</uri>
-      <pose>350.000000 120.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>toolbox_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Toolbox</uri>
-      <pose>390.000000 120.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
       <name>tile_27</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
       <pose>110.000000 80.000000 0.000000 0 0 1.570796</pose>
-    </include>
-
-    <include>
-      <name>extinguisher_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Extinguisher</uri>
-      <pose>190.000000 80.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -362,9 +355,21 @@
     </include>
 
     <include>
+      <name>radio_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Radio</uri>
+      <pose>310.000000 84.600000 0.000000 0 0 0.000000</pose>
+    </include>
+
+    <include>
       <name>tile_30</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>350.000000 80.000000 0.000000 0 0 4.712389</pose>
+    </include>
+
+    <include>
+      <name>toolbox_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Toolbox</uri>
+      <pose>350.000000 80.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -382,7 +387,7 @@
     <include>
       <name>phone_2</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Phone</uri>
-      <pose>270.000000 40.000000 0.000000 0 0 0.000000</pose>
+      <pose>230.000000 40.000000 0.008000 -1.570796 0 0.000000</pose>
     </include>
 
     <include>
@@ -464,6 +469,12 @@
     </include>
 
     <include>
+      <name>backpack_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
+      <pose>390.000000 0.000000 0.000000 0 0 0.000000</pose>
+    </include>
+
+    <include>
       <name>tile_46</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban 4way Intersection</uri>
       <pose>430.000000 0.000000 0.000000 0 0 1.570796</pose>
@@ -473,6 +484,12 @@
       <name>tile_47</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
       <pose>470.000000 0.000000 0.000000 0 0 3.141593</pose>
+    </include>
+
+    <include>
+      <name>electrical_box_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Electrical Box</uri>
+      <pose>470.000000 0.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -497,6 +514,12 @@
       <name>tile_51</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
       <pose>270.000000 -40.000000 0.000000 0 0 3.141593</pose>
+    </include>
+
+    <include>
+      <name>valve_1</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Valve</uri>
+      <pose>270.000000 -38.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -536,39 +559,15 @@
     </include>
 
     <include>
-      <name>phone_3</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Phone</uri>
-      <pose>190.000000 -80.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>valve_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Valve</uri>
-      <pose>270.000000 -80.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>toolbox_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Toolbox</uri>
-      <pose>350.000000 -80.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>backpack_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
-      <pose>390.000000 -80.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>electrical_box_1</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Electrical Box</uri>
-      <pose>430.000000 -80.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
       <name>tile_58</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Bend Right</uri>
       <pose>150.000000 -120.000000 0.000000 0 0 1.570796</pose>
+    </include>
+
+    <include>
+      <name>phone_3</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Phone</uri>
+      <pose>151.600000 -116.800000 0.008000 1.570796 0 0.000000</pose>
     </include>
 
     <include>
@@ -578,33 +577,27 @@
     </include>
 
     <include>
-      <name>valve_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Valve</uri>
-      <pose>230.000000 -120.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
       <name>tile_60</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
       <pose>190.000000 -160.000000 0.000000 0 0 1.570796</pose>
     </include>
 
     <include>
-      <name>backpack_3</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
-      <pose>230.000000 -160.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>electrical_box_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Electrical Box</uri>
-      <pose>150.000000 -200.000000 0.000000 0 0 0.000000</pose>
+      <name>valve_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Valve</uri>
+      <pose>190.000000 -160.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
       <name>tile_61</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
       <pose>190.000000 -200.000000 0.000000 0 0 1.570796</pose>
+    </include>
+
+    <include>
+      <name>electrical_box_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Electrical Box</uri>
+      <pose>188.000000 -200.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -617,6 +610,12 @@
       <name>tile_63</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Urban Straight</uri>
       <pose>270.000000 -200.000000 0.000000 0 0 3.141593</pose>
+    </include>
+
+    <include>
+      <name>backpack_3</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Backpack</uri>
+      <pose>270.000000 -200.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -635,12 +634,6 @@
       <name>tile_66</name>
       <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Tunnel Tile Blocker</uri>
       <pose>350.000000 -179.000000 0.000000 0 0 0.000000</pose>
-    </include>
-
-    <include>
-      <name>extinguisher_2</name>
-      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Extinguisher</uri>
-      <pose>390.000000 -200.000000 0.000000 0 0 0.000000</pose>
     </include>
 
     <include>
@@ -667,7 +660,14 @@
       <pose>350.000000 -240.000000 0.000000 0 0 3.141593</pose>
     </include>
 
+    <include>
+      <name>extinguisher_2</name>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Extinguisher</uri>
+      <pose>350.000000 -240.000000 0.000000 0 0 0.000000</pose>
+    </include>
 
+
+    <!-- Levels plugin -->
     <plugin name="ignition::gazebo" filename="dummy">
       <performer name="perf_x2">
         <ref>X2</ref>
@@ -681,15 +681,18 @@
 
 
       <level name="level0">
-        <ref>phone_1</ref>
         <ref>tile_0</ref>
+        <ref>radio_1</ref>
         <ref>tile_1</ref>
         <ref>tile_2</ref>
         <ref>tile_8</ref>
+        <ref>backpack_1</ref>
         <ref>tile_9</ref>
         <ref>tile_10</ref>
+        <ref>phone_1</ref>
         <ref>tile_12</ref>
         <ref>tile_14</ref>
+        <ref>toolbox_1</ref>
         <pose>300.000000 300.000000 100.000000 0 0 0</pose>
         <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
         <buffer>20.000000</buffer>
@@ -708,16 +711,15 @@
         <ref>tile_11</ref>
         <ref>tile_13</ref>
         <ref>tile_15</ref>
-        <ref>radio_1</ref>
         <ref>tile_23</ref>
         <ref>tile_24</ref>
         <ref>tile_25</ref>
         <ref>tile_26</ref>
-        <ref>radio_2</ref>
-        <ref>toolbox_1</ref>
         <ref>tile_28</ref>
         <ref>tile_29</ref>
+        <ref>radio_2</ref>
         <ref>tile_30</ref>
+        <ref>toolbox_2</ref>
         <ref>tile_32</ref>
         <ref>phone_2</ref>
         <ref>tile_33</ref>
@@ -727,24 +729,21 @@
         <ref>tile_43</ref>
         <ref>tile_44</ref>
         <ref>tile_45</ref>
+        <ref>backpack_2</ref>
         <ref>tile_50</ref>
         <ref>tile_51</ref>
+        <ref>valve_1</ref>
         <ref>tile_52</ref>
         <ref>tile_53</ref>
         <ref>tile_54</ref>
-        <ref>valve_1</ref>
-        <ref>toolbox_2</ref>
-        <ref>backpack_2</ref>
-        <ref>valve_2</ref>
-        <ref>backpack_3</ref>
         <ref>tile_66</ref>
         <pose>300.000000 100.000000 100.000000 0 0 0</pose>
         <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
         <buffer>20.000000</buffer>
       </level>
       <level name="level3">
-        <ref>backpack_1</ref>
         <ref>tile_16</ref>
+        <ref>extinguisher_1</ref>
         <ref>tile_17</ref>
         <ref>tile_18</ref>
         <ref>tile_19</ref>
@@ -752,7 +751,6 @@
         <ref>tile_21</ref>
         <ref>tile_22</ref>
         <ref>tile_27</ref>
-        <ref>extinguisher_1</ref>
         <ref>tile_31</ref>
         <ref>tile_36</ref>
         <ref>tile_37</ref>
@@ -762,10 +760,11 @@
         <ref>tile_49</ref>
         <ref>tile_56</ref>
         <ref>tile_57</ref>
-        <ref>phone_3</ref>
         <ref>tile_58</ref>
+        <ref>phone_3</ref>
         <ref>tile_59</ref>
         <ref>tile_60</ref>
+        <ref>valve_2</ref>
         <pose>100.000000 100.000000 100.000000 0 0 0</pose>
         <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
         <buffer>20.000000</buffer>
@@ -774,16 +773,16 @@
         <ref>tile_35</ref>
         <ref>tile_46</ref>
         <ref>tile_47</ref>
+        <ref>electrical_box_1</ref>
         <ref>tile_48</ref>
         <ref>tile_55</ref>
-        <ref>electrical_box_1</ref>
         <pose>500.000000 100.000000 100.000000 0 0 0</pose>
         <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
         <buffer>20.000000</buffer>
       </level>
       <level name="level5">
-        <ref>electrical_box_2</ref>
         <ref>tile_61</ref>
+        <ref>electrical_box_2</ref>
         <ref>tile_67</ref>
         <pose>100.000000 -100.000000 100.000000 0 0 0</pose>
         <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
@@ -792,17 +791,19 @@
       <level name="level6">
         <ref>tile_62</ref>
         <ref>tile_63</ref>
+        <ref>backpack_3</ref>
         <ref>tile_64</ref>
         <ref>tile_65</ref>
-        <ref>extinguisher_2</ref>
         <ref>tile_68</ref>
         <ref>tile_69</ref>
         <ref>tile_70</ref>
+        <ref>extinguisher_2</ref>
         <pose>300.000000 -100.000000 100.000000 0 0 0</pose>
         <geometry><box><size>200.000000 200.000000 200.000000</size></box></geometry>
         <buffer>20.000000</buffer>
       </level>
     </plugin>
+
 
   </world>
 </sdf>
