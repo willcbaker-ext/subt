@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-from __future__ import print_function
+#!/usr/bin/env python3
+
 import argparse
 import csv
 import math
@@ -67,6 +67,7 @@ def expand_levels(levels_dictionary):
 def model_include_string(tileNamePrefix, modelType,
                          pose_x, pose_y, pose_z, pose_yaw,
                          levels_sx, levels_sy, levels_sz, levels_buf,
+                         pose_roll='0', pose_pitch='0',
                          types_to_paths=None):
     if types_to_paths is None:
         types_to_paths_f = lambda t : t
@@ -106,39 +107,17 @@ def model_include_string(tileNamePrefix, modelType,
     return """    <include>
       <name>%s</name>
       <uri>%s</uri>
-      <pose>%f %f %f 0 0 %f</pose>
+      <pose>%f %f %f %s %s %f</pose>
     </include>
 """ % (modelName, types_to_paths_f(modelType),
                      float(pose_x), float(pose_y), float(pose_z),
-                     float(pose_yaw))
-
-def print_tsv_model_includes(args):
-    types_to_paths = None
-    if (os.path.exists(args.map_file)):
-        with open(args.map_file, 'rb') as mapf:
-            types_to_paths = yaml.load(mapf)
-
-    with open(args.file_name, 'rb') as tsvfile:
-        spamreader = csv.reader(tsvfile, delimiter='\t')
-        for iy, row in enumerate(spamreader):
-            for ix, cell in enumerate(row):
-                if (len(cell) > 0):
-                    for parts in csv.reader([cell]):
-                        modelType = parts[0]
-                        yawDegrees = float(parts[1])
-                        z_level = float(parts[2])
-                        print(model_include_string("tile", modelType,
-                                         args.x0 + ix*args.scale_x,
-                                         args.y0 - iy*args.scale_y,
-                                         args.z0 + z_level*args.scale_z,
-                                         yawDegrees * math.pi / 180,
-                                         args.levels_sx, args.levels_sy, args.levels_sz, args.levels_buf,
-                                         types_to_paths))
+                     pose_roll, pose_pitch, float(pose_yaw))
 
 def parse_args(argv):
     parser = argparse.ArgumentParser('Generate tiled world file from tsv.')
-    parser.add_argument('file_name', help='name of tsv file to read')
+    parser.add_argument('tsv_name', help='name of tsv file to read')
     parser.add_argument('--world-name', dest='world_name', type=str, default='default', help='world name')
+    parser.add_argument('--world-file', dest='world_file', type=str, default='', help='world output file')
     parser.add_argument('--x0', dest='x0', type=float, default=0, help='origin X coordinate')
     parser.add_argument('--y0', dest='y0', type=float, default=0, help='origin Y coordinate')
     parser.add_argument('--z0', dest='z0', type=float, default=0, help='origin Z coordinate')
@@ -158,28 +137,119 @@ def parse_args(argv):
     args = parser.parse_args()
     return args
 
-def check_main():
-    args = parse_args(sys.argv)
+def print_world_top(args, world_file):
     print("""<?xml version="1.0" ?>
 <!--
-  Generated with the tile_tsv.py script:
-    %s
+  Generated with the {file_name} script:
+    {command}
 -->
 <sdf version="1.6">
-  <world name="%s">
+  <world name="{world_name}">
 
-    <gui fullscreen='0'>
-      <camera name='user_camera'>
-        <pose>-6.3 -4.2 3.6 0 0.268 0.304</pose>
-      </camera>
+    <physics name="1ms" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin
+      filename="libignition-gazebo-physics-system.so"
+      name="ignition::gazebo::systems::Physics">
+    </plugin>
+    <plugin
+      filename="libignition-gazebo-user-commands-system.so"
+      name="ignition::gazebo::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="libignition-gazebo-scene-broadcaster-system.so"
+      name="ignition::gazebo::systems::SceneBroadcaster">
+    </plugin>
+
+    <gui fullscreen="0">
+
+      <!-- 3D scene -->
+      <plugin filename="Scene3D" name="3D View">
+        <ignition-gui>
+          <title>3D View</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="string" key="state">docked</property>
+        </ignition-gui>
+
+        <engine>ogre2</engine>
+        <scene>scene</scene>
+        <ambient_light>0.4 0.4 0.4</ambient_light>
+        <background_color>0.8 0.8 0.8</background_color>
+        <camera_pose>-6 0 6 0 0.5 0</camera_pose>
+        <service>/world/{world_name}/scene/info</service>
+        <pose_topic>/world/{world_name}/pose/info</pose_topic>
+        <scene_topic>/world/{world_name}/scene/info</scene_topic>
+        <deletion_topic>/world/{world_name}/scene/deletion</deletion_topic>
+      </plugin>
+
+      <!-- World control -->
+      <plugin filename="WorldControl" name="World control">
+        <ignition-gui>
+          <title>World control</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">72</property>
+          <property type="double" key="width">121</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="left" target="left"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </ignition-gui>
+
+        <play_pause>true</play_pause>
+        <step>true</step>
+        <start_paused>true</start_paused>
+        <service>/world/{world_name}/control</service>
+        <stats_topic>/world/{world_name}/stats</stats_topic>
+
+      </plugin>
+
+      <!-- World statistics -->
+      <plugin filename="WorldStats" name="World stats">
+        <ignition-gui>
+          <title>World stats</title>
+          <property type="bool" key="showTitleBar">false</property>
+          <property type="bool" key="resizable">false</property>
+          <property type="double" key="height">110</property>
+          <property type="double" key="width">290</property>
+          <property type="double" key="z">1</property>
+
+          <property type="string" key="state">floating</property>
+          <anchors target="3D View">
+            <line own="right" target="right"/>
+            <line own="bottom" target="bottom"/>
+          </anchors>
+        </ignition-gui>
+
+        <sim_time>true</sim_time>
+        <real_time>true</real_time>
+        <real_time_factor>true</real_time_factor>
+        <iterations>true</iterations>
+        <topic>/world/{world_name}/stats</topic>
+
+      </plugin>
+
     </gui>
 
-    <scene>
-      <ambient>0.2 0.2 0.2 1.0</ambient>
-      <background>0.34 0.39 0.43 1.0</background>
-      <grid>false</grid>
-      <origin_visual>false</origin_visual>
-    </scene>
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
 
     <!-- The base station / staging area -->
     <!-- Important: Do not rename this model! -->
@@ -187,21 +257,119 @@ def check_main():
       <static>true</static>
       <name>BaseStation</name>
       <pose>0 0 0 0 0 0</pose>
-      <uri>model://tunnel_staging_area</uri>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/subt_tunnel_staging_area/2</uri>
     </include>
 
     <!-- Fiducial marking the origin for artifacts reports -->
     <include>
       <name>artifact_origin</name>
       <pose>2 4 0.5 0 0 0</pose>
-      <uri>model://fiducial</uri>
+      <uri>https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Fiducial</uri>
     </include>
 
 
-    <!-- Tunnel tiles and artifacts -->""" %
-  (' '.join(sys.argv).replace('--', '-\-'), args.world_name))
-    print_tsv_model_includes(args)
+    <!-- Tunnel tiles and artifacts -->""".format(
+    file_name=__file__, command=' '.join(sys.argv).replace('--', '-\-'), world_name=args.world_name), file=world_file)
 
+def check_main():
+    args = parse_args(sys.argv)
+
+    if len(args.world_file) > 0:
+        world_file = open(args.world_file, 'w')
+    else:
+        world_file = sys.stdout
+
+    print_world_top(args, world_file=world_file)
+
+    types_to_paths = None
+    if (os.path.exists(args.map_file)):
+        with open(args.map_file, 'rb') as mapf:
+            types_to_paths = yaml.load(mapf)
+
+    with open(args.tsv_name, 'rt') as tsvfile:
+        spamreader = csv.reader(tsvfile, delimiter='\t')
+        for iy, row in enumerate(spamreader):
+            for ix, cell in enumerate(row):
+                if (len(cell) > 0):
+                    for parts in csv.reader([cell]):
+                        # each cell of spreadsheet contains comma-separated
+                        # value strings with at least 3 fields
+                        # modelType,yawDegrees,z_level eg. 'tunnel_tile_1,180,-1'
+                        # it can have more fields, which are described below
+                        modelType = parts[0]
+                        yawDegrees = float(parts[1])
+                        z_level = float(parts[2])
+                        pose_x = args.x0 + ix*args.scale_x
+                        pose_y = args.y0 - iy*args.scale_y
+                        pose_z = args.z0 + z_level*args.scale_z
+                        print(model_include_string("tile", modelType,
+                                         pose_x, pose_y, pose_z,
+                                         yawDegrees * math.pi / 180,
+                                         args.levels_sx, args.levels_sy, args.levels_sz, args.levels_buf,
+                                         types_to_paths=types_to_paths),
+                                         file=world_file)
+                        # the 4th field is another string that contains a list
+                        # of submodels and a relative pose where they are to be
+                        # placed within the tile
+                        # submodels are separated by `;` eg. 'Phone;tunnel_tile_blocker'
+                        # a relative pose can be specified with @
+                        # pose is specified like in sdformat but with angles in degrees
+                        # eg. 'Phone@0 0 0.004 90 0 0;tunnel_tile_blocker@11 0 0 0 0 0'
+                        if len(parts) > 3:
+                            submodels = parts[3]
+                            for submodel in submodels.split(';'):
+                                pose_xi = pose_x
+                                pose_yi = pose_y
+                                pose_zi = pose_z
+                                # pose_roll and pose_pitch are printed as strings for now
+                                # to minimize the diff for tunnel_qual.world
+                                # which has a bunch of poses with no trailing zeros for roll and pitch
+                                # like '100.0000 200.0000 0.0000 0 0 -1.57079'
+                                # so let pose_roll and pose_pitch default to '0'
+                                pose_roll = '0'
+                                pose_pitch = '0'
+                                pose_yaw = 0.0
+                                # separate name from pose string by splitting at `@`
+                                submodelType = ''
+                                poseStr = ''
+                                submodelType_poseStr = submodel.split('@')
+                                if len(submodelType_poseStr) == 0:
+                                    print("ERROR: invalid submodel specification %s" % submodel)
+                                    continue
+                                submodelType = submodelType_poseStr[0]
+                                # pose is optional
+                                if len(submodelType_poseStr) >= 2:
+                                    poseStr = submodelType_poseStr[1]
+                                pose = poseStr.split(' ')
+                                # set position if only 3 pose values are given
+                                if len(pose) >= 3:
+                                    pose_xi += float(pose[0])
+                                    pose_yi += float(pose[1])
+                                    pose_zi += float(pose[2])
+                                # additionally set roll, pitch, yaw if 6 values are given
+                                if len(pose) == 6:
+                                    # print pose_roll and pose_pitch as %f if
+                                    # they aren't exactly '0'
+                                    if pose_roll != pose[3]:
+                                        pose_roll = '%f' % (float(pose[3]) * math.pi / 180)
+                                    if pose_pitch != pose[4]:
+                                        pose_pitch = '%f' % (float(pose[4]) * math.pi / 180)
+                                    pose_yaw = float(pose[5]) * math.pi / 180
+                                print(model_include_string("tile", submodelType,
+                                                 pose_xi, pose_yi, pose_zi,
+                                                 pose_yaw * math.pi / 180,
+                                                 args.levels_sx, args.levels_sy, args.levels_sz, args.levels_buf,
+                                                 pose_roll=pose_roll,
+                                                 pose_pitch=pose_pitch,
+                                                 types_to_paths=types_to_paths),
+                                                 file=world_file)
+
+    print_world_bottom(args, world_file=world_file)
+
+    if len(args.world_file) > 0:
+        world_file.close()
+
+def print_world_bottom(args, world_file=sys.stdout):
     global plugin_artifacts
     global plugin_levels
     print("""
@@ -217,15 +385,26 @@ def check_main():
     <!-- The SubT comms broker plugin -->
     <plugin name="comms_broker_plugin" filename="libCommsBrokerPlugin.so">
       <comms_model>
-        <neighbor_distance_min>0.0</neighbor_distance_min>
-        <neighbor_distance_max>100.0</neighbor_distance_max>
-        <comms_distance_min>0.0</comms_distance_min>
-        <comms_distance_max>100.0</comms_distance_max>
-        <comms_drop_probability_min>0.0</comms_drop_probability_min>
-        <comms_drop_probability_max>0.0</comms_drop_probability_max>
-        <comms_outage_probability>0.0</comms_outage_probability>
-        <comms_outage_duration_min>0.0</comms_outage_duration_min>
-        <comms_outage_duration_max>10.0</comms_outage_duration_max>
+        <comms_model_type>visibility_range</comms_model_type>
+
+        <range_config>
+          <max_range>500.0</max_range>
+          <fading_exponent>2.5</fading_exponent>
+          <L0>40</L0>
+          <sigma>10.0</sigma>
+        </range_config>
+
+        <visibility_config>
+          <visibility_cost_to_fading_exponent>0.2</visibility_cost_to_fading_exponent>
+          <comms_cost_max>15</comms_cost_max>
+        </visibility_config>
+
+        <radio_config>
+          <capacity>1000000</capacity>
+          <tx_power>20</tx_power>
+          <noise_floor>-90</noise_floor>
+          <modulation>QPSK</modulation>
+        </radio_config>
       </comms_model>
     </plugin>
 
@@ -288,7 +467,7 @@ def check_main():
 
   </world>
 </sdf>""" %
-(args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z, expand_levels(plugin_levels)))
-        
+    (args.world_name, plugin_artifacts, args.wind_x, args.wind_y, args.wind_z, expand_levels(plugin_levels)), file=world_file)
+
 if __name__ == '__main__':
     check_main()
