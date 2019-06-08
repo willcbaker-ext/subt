@@ -349,8 +349,8 @@ graph {
                                     if pose_pitch != pose[4]:
                                         pose_pitch = '%f' % (float(pose[4]) * math.pi / 180)
                                     pose_yaw = float(pose[5]) * math.pi / 180
-                                (modelName, _) = generate_model_name("tile", submodelType)
-                                print(model_include_string(modelName, submodelType,
+                                (submodelName, _) = generate_model_name("tile", submodelType)
+                                print(model_include_string(submodelName, submodelType,
                                                  pose_xi, pose_yi, pose_zi,
                                                  pose_yaw * math.pi / 180,
                                                  pose_roll=pose_roll,
