@@ -231,7 +231,12 @@ def print_world_top(args, world_file):
 def print_graph_top(args, graph_file):
     print('''/* Visibility graph for %s
    Generated with the %s script:
-     %s */''' % (
+     %s */
+
+graph {
+  /* ==== Vertices ==== */
+
+  /* Base station / Staging area */''' % (
         args.tsv_name, __file__, ' '.join(sys.argv).replace('--', '-\-')),
         file=graph_file)
 
@@ -269,12 +274,6 @@ def check_main():
 
     BASE_MESH = 'base_station'
     base_symbol = 'S'
-
-    print('''
-graph {
-  /* ==== Vertices ==== */
-
-  /* Base station / Staging area */''', file=graph_file)
 
     # First vertex is base station, not in tsv
     print(vert_fmt_base % (base_symbol, base_symbol, BASE_MESH), file=graph_file)
