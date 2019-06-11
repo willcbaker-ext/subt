@@ -351,7 +351,7 @@ def check_main():
                                 (submodelName, _) = generate_model_name("tile", submodelType)
                                 print(model_include_string(submodelName, submodelType,
                                                  pose_xi, pose_yi, pose_zi,
-                                                 pose_yaw * math.pi / 180,
+                                                 pose_yaw,
                                                  pose_roll=pose_roll,
                                                  pose_pitch=pose_pitch),
                                                  file=world_file)
