@@ -30,7 +30,6 @@ RUN apt-get update \
         net-tools \
         iputils-ping \
         xauth \
-        xvfb \
  && apt-get clean
 
 # Add a user with the same user_id as the user outside the container
