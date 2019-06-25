@@ -141,6 +141,7 @@ class GraphRules:
         return is_connected
 
 
+    # Constraint rule 3: parallel non-intersecting linear tiles aren't neighbors
     @classmethod
     def check_linear_tile_connection(self, y1, x1, yaw1, y2, x2, yaw2):
 
@@ -161,6 +162,39 @@ class GraphRules:
                 return False
         elif abs(yaw1 - 90) < 1e-6 or abs(yaw1 - 270) < 1e-6:
             if y1 != y2:
+                return False
+
+        return True
+
+
+    # Constraint rule 4: disconect tiles with a blocker between them
+    #     (y1, x1), (y2, x2): Coordinates of two adjacent cells in the tsv.
+    #     blocker_xyz#: (x, y, z) local position of blocker wrt tile.
+    @classmethod
+    def check_blocker_tile_connection(self, y1, x1, blocker_xyz1, y2, x2, blocker_xyz2):
+
+        # Assumptions: exactly one of x or y is non-zero. That is the direction
+        #     the blocker will be placed. No connections to diagonal cells.
+
+        # If tile 1 has blocker
+        if blocker_xyz1 != None:
+            # Use tile 1 (y, x) coords as reference
+            # Flip y. y in tsv increases downwards. y in world decreases downwards.
+            dy = -(y2 - y1)
+            dx = x2 - x1
+
+            # Break connection if blocker is in between the two tiles
+            # dx > 0 places blocker toward the cell to the right
+            if np.sign(blocker_xyz1[0]) == np.sign(dx) and np.sign(blocker_xyz1[1]) == np.sign(dy):
+                return False
+
+        if blocker_xyz2 != None:
+            # Use tile 2 (y, x) coords as reference
+            # Flip y. y in tsv increases downwards. y in world decreases downwards.
+            dy = -(y1 - y2)
+            dx = x1 - x2
+
+            if np.sign(blocker_xyz2[0]) == np.sign(dx) and np.sign(blocker_xyz2[1]) == np.sign(dy):
                 return False
 
         return True
@@ -256,16 +290,22 @@ def check_main():
     print_graph_top(args, graph_file=graph_file)
     print_world_top(args, world_file=world_file)
 
+    # Topology graph format
     # vert_id, vert_id, tile_type, vert_id
     vert_fmt_base = '  %s   [label="%s::%s::BaseStation"];'
     vert_fmt = '  %-3d [label="%d::%s::%s"];'
     # vert1_id, vert2_id, edge_cost
     edge_fmt = '  %-2s -- %-3d [label=%d];%s'
 
+    # Data to store while reading tsv file, to infer graph node connections
     # (iy, ix): iv
     cell_to_iv = dict()
+    # (iy, ix): ''
     cell_to_mesh = dict()
+    # (iy, ix): yaw
     cell_to_yaw = dict()
+    # (iy, ix): (dx, dy, dz)
+    cell_to_blocker = dict()
 
     # Keep a sorted list of vertex indices. This makes output prettier.
     # [(iy, ix), ...]
@@ -356,12 +396,18 @@ def check_main():
                                                  pose_pitch=pose_pitch),
                                                  file=world_file)
 
-                        # Ignore artifacts in topology
+                                # Record blocker position for inferring graph connectivity
+                                if submodelType == GraphRules.BLOCKER_TILE:
+                                    # Currently ignoring orientation of blocker. Just take position
+                                    cell_to_blocker[(iy, ix)] = (float(pose[0]), float(pose[1]), float(pose[2]))
+
+                        # Print this tile as a vertex in topology graph.
+                        # Ignore artifacts.
                         if modelType not in GraphRules.artifacts:
                             print(vert_fmt % (iv, iv, modelType, modelName),
                                 file=graph_file)
 
-                            iyx.append ((iy, ix))
+                            iyx.append((iy, ix))
 
                             # Yaw resolves ambiguous connected vertices
                             cell_to_yaw[(iy, ix)] = yawDegrees
@@ -374,6 +420,7 @@ def check_main():
                                 iv_start_tile = iv
                                 iv_start_type = modelType
 
+    # Print edges of topology graph
     print('''
   /* ==== Edges ==== */
 
@@ -406,13 +453,24 @@ def check_main():
     adj_r, adj_c = np.where(np.logical_or(np.logical_and(adjy1, adjx0),
       np.logical_and(adjy0, adjx1)))
 
-    # For each pair of adjacent cells
+    # For each pair of adjacent cells (tiles)
     for t1, t2 in zip(adj_r, adj_c):
         # Unique vertex (tile) IDs
         iv1 = cell_to_iv[y[t1], x[t1]]
         iv2 = cell_to_iv[y[t2], x[t2]]
         mesh1 = cell_to_mesh[y[t1], x[t1]]
         mesh2 = cell_to_mesh[y[t2], x[t2]]
+
+        blocker1 = (y[t1], x[t1]) in cell_to_blocker.keys()
+        if blocker1:
+            blocker1 = cell_to_blocker[y[t1], x[t1]]
+        else:
+            blocker1 = None
+        blocker2 = (y[t2], x[t2]) in cell_to_blocker.keys()
+        if blocker2:
+            blocker2 = cell_to_blocker[y[t2], x[t2]]
+        else:
+            blocker2 = None
 
 
         # Resolve ambiguities in connectivity, e.g. 2 x 2 blocks in tsv
@@ -438,12 +496,6 @@ def check_main():
             is_connected = GraphRules.check_corner_tile_connection(
                 cdy, cdx, cell_to_yaw[cy, cx])
 
-        # Currently removing blocker from topological graph
-        # Constraint rule 2: consecutive blockers can't be connected
-        #if mesh1 == GraphRules.BLOCKER_TILE and \
-        #    mesh2 == GraphRules.BLOCKER_TILE:
-        #    is_connected = False
-
         # Constraint rule 3: parallel non-intersecting linear tiles aren't nbrs
         if mesh1 in GraphRules.LINEAR_TILES and \
             mesh2 in GraphRules.LINEAR_TILES:
@@ -451,6 +503,14 @@ def check_main():
                 y[t1], x[t1], cell_to_yaw[y[t1], x[t1]],
                 y[t2], x[t2], cell_to_yaw[y[t2], x[t2]])
 
+        # If connected so far, check if need to break connections
+        if is_connected:
+            # Constraint rule 4: disconect tiles with a blocker between them
+            if blocker1 != None or blocker2 != None:
+                is_connected = GraphRules.check_blocker_tile_connection(
+                    y[t1], x[t1], blocker1, y[t2], x[t2], blocker2)
+
+        # Output connecting edge
         if is_connected:
             cmt = ''
             if mesh1 in GraphRules.intersections:
