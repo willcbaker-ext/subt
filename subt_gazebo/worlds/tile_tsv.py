@@ -62,7 +62,8 @@ class GraphRules:
         'tunnel_tile_7': TURN,
         'tunnel_tile_blocker': STRAIGHT,
         'constrained_tunnel_tile_tall': STRAIGHT,
-        'constrained_tunnel_tile_short': STRAIGHT}
+        'constrained_tunnel_tile_short': STRAIGHT,
+    }
 
     # For comments in .dot
     intersections = ['tunnel_tile_1', 'tunnel_tile_4']
@@ -148,6 +149,10 @@ class GraphRules:
         # Hardcoded assumption on meshes:
         # Linear tile meshes are vertical (parallel to world y) at yaw 0,
         #     horizontal (parallel to world x) at yaw 90.
+
+        # Keep angles positive in range [0, 360)
+        yaw1 = yaw1 % 360
+        yaw2 = yaw2 % 360
 
         offset = abs(yaw2 - yaw1)
         # Require consecutive linear tiles to be parallel
