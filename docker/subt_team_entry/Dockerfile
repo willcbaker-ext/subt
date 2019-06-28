@@ -104,26 +104,18 @@ RUN mkdir -p subt_ws/src \
  && cd subt_ws/src \
  && hg clone https://bitbucket.org/osrf/subt
 
-# Download virtual stix models
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Edgar Mine Virtual STIX" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Base Station" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Black and Decker Cordless Drill" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Fiducial" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Fire Extinguisher" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/JanSport Backpack Red" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Jersey Barrier" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Rescue Randy Sitting" -v 4
-RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/Samsung J8 Black" -v 4
-
 # Download the robot models
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X1 Config 1" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X1 Config 2" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X1 Config 3" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X1 Config 4" -v 4
+RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X1 Config 5" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X2 Config 1" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X2 Config 2" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X2 Config 3" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X2 Config 4" -v 4
+RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X2 Config 5" -v 4
+RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X2 Config 6" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X3 UAV Config 1" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X3 UAV Config 2" -v 4
 RUN ign fuel download --url "https://fuel.ignitionrobotics.org/openrobotics/models/X3 UAV Config 3" -v 4
