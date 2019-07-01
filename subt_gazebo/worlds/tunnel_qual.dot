@@ -1,12 +1,12 @@
 /* Visibility graph for tunnel_qual.tsv
    Generated with the tile_tsv.py script:
-     tile_tsv.py tunnel_qual.tsv -\-world-name tunnel_qual -\-scale_x 20 -\-scale_y 20 -\-scale_z 5 -\-x0 20 -\-y0 240 -\-z0 -10 -\-world-file tunnel_qual.world -\-graph-file tunnel_qual.dot */
+     tile_tsv.py tunnel_qual.tsv -\-world-name tunnel_qual -\-scale_x 20 -\-scale_y 20 -\-scale_z 5 -\-y0 240 -\-z0 -10 -\-world-file tunnel_qual.world -\-graph-file tunnel_qual.dot */
 
 graph {
   /* ==== Vertices ==== */
 
   /* Base station / Staging area */
-  S   [label="S::base_station::BaseStation"];
+  9999999   [label="9999999::base_station::BaseStation"];
 
   0   [label="0::tunnel_tile_2::tile_0"];
   1   [label="1::tunnel_tile_5::tile_1"];
@@ -121,7 +121,7 @@ graph {
   /* ==== Edges ==== */
 
   /* Base station */
-  S  -- 60  [label=1];
+  9999999 -- 60  [label=1];
   0  -- 1   [label=3];
   0  -- 4   [label=3];
   1  -- 2   [label=1];

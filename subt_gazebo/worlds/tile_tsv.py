@@ -12,7 +12,7 @@ artifact_name_counter = {}
 plugin_artifacts = ''
 
 def generate_model_name(tileNamePrefix, modelType):
-    if 'tunnel_tile_' in modelType:
+    if 'tunnel_tile_' in modelType or 'Urban' in modelType or 'Tunnel Tile' in modelType:
         global tunnel_tile_name_counter
         modelName = tileNamePrefix + "_" + str(tunnel_tile_name_counter)
         counter = tunnel_tile_name_counter
@@ -73,13 +73,14 @@ class GraphRules:
     # Constraint rule 1:
     # Yaw of 90-degree corner tile resolves ambiguous edges e.g. when
     #     all cells in a 2 x 2 block in tsv are occupied
-    CORNER_TILE = 'tunnel_tile_2'
+    CORNER_TILES = ['tunnel_tile_2']
     # Constraint rule 2: consecutive blockers cannot be connected
     BLOCKER_TILE = 'tunnel_tile_blocker'
     # Constraint rule 3: parallel non-intersecting (not on same line) linear
     #     tiles cannot be connected. Check yaw to determine connection.
     LINEAR_TILES = ['tunnel_tile_5', 'tunnel_tile_6', 'tunnel_tile_7',
-        'constrained_tunnel_tile_tall', 'constrained_tunnel_tile_short']
+                    'constrained_tunnel_tile_tall',
+                    'constrained_tunnel_tile_short']
 
     # Ignored in scene graph
     artifacts = ['Backpack', 'Electrical Box', 'Extinguisher', 'Phone',
@@ -115,6 +116,9 @@ class GraphRules:
     def check_corner_tile_connection(self, cdy, cdx, yaw):
 
         is_connected = True
+
+        # Keep angles positive in range [0, 360)
+        yaw = yaw % 360
 
         # Hardcoded based on corner tile mesh
         # Yaw degrees are with reference to the corner tile
@@ -188,10 +192,12 @@ class GraphRules:
             dy = -(y2 - y1)
             dx = x2 - x1
 
-            # Break connection if blocker is in between the two tiles
-            # dx > 0 places blocker toward the cell to the right
-            if np.sign(blocker_xyz1[0]) == np.sign(dx) and np.sign(blocker_xyz1[1]) == np.sign(dy):
-                return False
+            # Check each blocker in the list
+            for blk_xyz in blocker_xyz1:
+                # Break connection if blocker is in between the two tiles
+                # dx > 0 places blocker toward the cell to the right
+                if np.sign(blk_xyz[0]) == np.sign(dx) and np.sign(blk_xyz[1]) == np.sign(dy):
+                    return False
 
         if blocker_xyz2 != None:
             # Use tile 2 (y, x) coords as reference
@@ -199,8 +205,10 @@ class GraphRules:
             dy = -(y1 - y2)
             dx = x1 - x2
 
-            if np.sign(blocker_xyz2[0]) == np.sign(dx) and np.sign(blocker_xyz2[1]) == np.sign(dy):
-                return False
+            # Check each blocker in the list
+            for blk_xyz in blocker_xyz2:
+                if np.sign(blk_xyz[0]) == np.sign(dx) and np.sign(blk_xyz[1]) == np.sign(dy):
+                    return False
 
         return True
 
@@ -297,7 +305,7 @@ def check_main():
 
     # Topology graph format
     # vert_id, vert_id, tile_type, vert_id
-    vert_fmt_base = '  %s   [label="%s::%s::BaseStation"];'
+    vert_fmt_base = '  %d   [label="%d::%s::BaseStation"];'
     vert_fmt = '  %-3d [label="%d::%s::%s"];'
     # vert1_id, vert2_id, edge_cost
     edge_fmt = '  %-2s -- %-3d [label=%d];%s'
@@ -316,12 +324,17 @@ def check_main():
     # [(iy, ix), ...]
     iyx = []
 
+    start_tile_ix = None
+    start_tile_iy = None
+    start_tile_iv = None
+    start_type = None
+
 
     BASE_MESH = 'base_station'
-    base_symbol = 'S'
+    base_tile_iv = 9999999
 
     # First vertex is base station, not in tsv
-    print(vert_fmt_base % (base_symbol, base_symbol, BASE_MESH), file=graph_file)
+    print(vert_fmt_base % (base_tile_iv, base_tile_iv, BASE_MESH), file=graph_file)
     print('', file=graph_file)
 
     # read from tsv spreadsheet file
@@ -341,7 +354,22 @@ def check_main():
                         pose_x = args.x0 + ix*args.scale_x
                         pose_y = args.y0 - iy*args.scale_y
                         pose_z = args.z0 + z_level*args.scale_z
+
+                        # base_station cell is only for topology graph. Ignore it for SDF generation.
+                        if modelType == BASE_MESH:
+                            start_type = modelType
+                            # Record the future tile to look for in a subsequent iteration
+                            # Assumption: Base station always faces +x, so always take the cell
+                            #     to the right of it as starting node in graph.
+                            start_tile_ix = ix + 1
+                            start_tile_iy = iy
+                            continue
+
                         (modelName, iv) = generate_model_name("tile", modelType)
+                        # Record vertex index
+                        if iy == start_tile_iy and ix == start_tile_ix:
+                            start_tile_iv = iv
+
                         print(model_include_string(modelName, modelType,
                                          pose_x, pose_y, pose_z,
                                          yawDegrees * math.pi / 180),
@@ -404,7 +432,10 @@ def check_main():
                                 # Record blocker position for inferring graph connectivity
                                 if submodelType == GraphRules.BLOCKER_TILE:
                                     # Currently ignoring orientation of blocker. Just take position
-                                    cell_to_blocker[(iy, ix)] = (float(pose[0]), float(pose[1]), float(pose[2]))
+                                    if (iy, ix) not in cell_to_blocker.keys():
+                                        cell_to_blocker[(iy, ix)] = [(float(pose[0]), float(pose[1]), float(pose[2]))]
+                                    else:
+                                        cell_to_blocker[(iy, ix)].append((float(pose[0]), float(pose[1]), float(pose[2])))
 
                         # Print this tile as a vertex in topology graph.
                         # Ignore artifacts.
@@ -418,21 +449,20 @@ def check_main():
                             cell_to_yaw[(iy, ix)] = yawDegrees
                             cell_to_iv[(iy, ix)] = iv
                             cell_to_mesh[(iy, ix)] = modelType
-                         
-                            # Assumption: Leftmost column has only one cell,
-                            #   the start cell connected to base station
-                            if ix == 0:
-                                iv_start_tile = iv
-                                iv_start_type = modelType
+
+    if start_tile_iv == None or start_type == None:
+        print('ERROR: Could not find where to place %s in the graph. Did you specify it in the .tsv file?' % BASE_MESH,
+            file=sys.stderr)
+        return
 
     # Print edges of topology graph
     print('''
   /* ==== Edges ==== */
 
   /* Base station */''', file=graph_file)
-    # Base station (vertex base_symbol) to start tunnel tile
-    print(edge_fmt % (base_symbol, iv_start_tile, GraphRules.calc_edge_cost(BASE_MESH,
-        iv_start_type), ''), file=graph_file)
+    # Base station (vertex base_tile_iv) to start tunnel tile
+    print(edge_fmt % (base_tile_iv, start_tile_iv, GraphRules.calc_edge_cost(BASE_MESH,
+        start_type), ''), file=graph_file)
 
     y, x = zip(*iyx)
 
@@ -485,13 +515,13 @@ def check_main():
         # Constraint rule 1
         check_corner = False
         # Set corner tile as reference tile, subtract reference tile
-        if mesh1 == GraphRules.CORNER_TILE:
+        if mesh1 in GraphRules.CORNER_TILES:
             cdy = y[t2] - y[t1]
             cdx = x[t2] - x[t1]
             cy = y[t1]
             cx = x[t1]
             check_corner = True
-        elif mesh2 == GraphRules.CORNER_TILE:
+        elif mesh2 in GraphRules.CORNER_TILES:
             cdy = y[t1] - y[t2]
             cdx = x[t1] - x[t2]
             cy = y[t2]
