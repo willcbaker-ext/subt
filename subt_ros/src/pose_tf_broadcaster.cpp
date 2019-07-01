@@ -27,12 +27,28 @@
 #endif
 
 #include <geometry_msgs/TransformStamped.h>
+#include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
 
-void poseCallback(const geometry_msgs::TransformStamped& msg)
+void sendTransform(const geometry_msgs::TransformStamped& msg)
 {
   static tf2_ros::TransformBroadcaster br;
   br.sendTransform(msg);
+}
+
+// Odom broadcaster
+void odomCallback(const nav_msgs::Odometry& msg)
+{
+  geometry_msgs::TransformStamped geomMsg;
+  geomMsg.header.stamp = msg.header.stamp;
+  geomMsg.header.frame_id = msg.header.frame_id;
+  geomMsg.child_frame_id = msg.child_frame_id;
+  geomMsg.transform.translation.x = msg.pose.pose.position.x;
+  geomMsg.transform.translation.y = msg.pose.pose.position.y;
+  geomMsg.transform.translation.z = msg.pose.pose.position.z;
+  geomMsg.transform.rotation = msg.pose.pose.orientation;
+
+  sendTransform(geomMsg);
 }
 
 //////////////////////////////////////////////////
@@ -40,7 +56,8 @@ int main(int argc, char * argv[])
 {
   ros::init(argc, argv, "pose_tf_broadcaster");
   ros::NodeHandle node;
-  ros::Subscriber sub = node.subscribe("pose", 10, &poseCallback);
+  ros::Subscriber sub = node.subscribe("pose", 10, &sendTransform);
+  ros::Subscriber odomSub = node.subscribe("odom", 10, &odomCallback);
 
   ros::spin();
   return 0;
