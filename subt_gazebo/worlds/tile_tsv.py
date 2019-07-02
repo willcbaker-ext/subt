@@ -276,9 +276,9 @@ def print_world_top(args, world_file):
     (__file__, ' '.join(sys.argv).replace('--', '-\-'), args.world_name), file=world_file)
 
 def print_graph_top(args, graph_file):
-    print('''/* Visibility graph for %s
-   Generated with the %s script:
-     %s */
+    print('''/* Visibility graph for %s */
+/* Generated with the %s script: */
+/*   %s */
 
 graph {
   /* ==== Vertices ==== */
