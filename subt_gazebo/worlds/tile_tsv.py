@@ -7,7 +7,7 @@ import numpy as np
 import os
 import sys
 
-tunnel_tile_name_counter = 0
+tunnel_tile_name_counter = 1
 artifact_name_counter = {}
 plugin_artifacts = ''
 
@@ -331,7 +331,7 @@ def check_main():
 
 
     BASE_MESH = 'base_station'
-    base_tile_iv = 9999999
+    base_tile_iv = 0
 
     # First vertex is base station, not in tsv
     print(vert_fmt_base % (base_tile_iv, base_tile_iv, BASE_MESH), file=graph_file)
