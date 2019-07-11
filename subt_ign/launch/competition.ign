@@ -16,7 +16,7 @@
   # When 'enableGroundTruth = true' absolute poses of vehicles will be published.
   # This is useful for debugging purposes, but will not be available during
   # competition scoring.
-  $enableGroundTruth = false
+  $enableGroundTruth = true
 
   # Check if robotNameX and robotConfigX exists
   spawnRowSize = 4

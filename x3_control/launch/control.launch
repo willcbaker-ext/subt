@@ -6,30 +6,70 @@
   <arg name="robot_namespace" default="$(arg x3_name)"/>
 
   <group ns="$(arg x3_name)">
+    <!--<node pkg="robot_localization" type="ukf_localization_node"-->
+    <!--      name="robot_localization_ukf_node_odom">-->
+    <!--  <param name="frequency" value="1000." />-->
+    <!--  <param name="sensor_timeout" value="0.2" />-->
+    <!--  <param name="two_d_mode" value="false" />-->
+    <!--  <param name="odom_frame" value="$(arg x3_name)/odom" />-->
+    <!--  <param name="base_link_frame" value="$(arg x3_name)" />-->
+    <!--  <param name="base_link_frame_output" value="$(arg x3_name)" />-->
+    <!--  <param name="world_frame" value="$(arg x3_name)/odom" />-->
+    <!--  <param name="publish_tf" value="false" />-->
+    <!--  <param name="imu0" value="imu/data" />-->
+    <!--  <rosparam param="imu0_config">-->
+    <!--    [false, false, false, true, true, true,-->
+    <!--    true, true, true, true, true, true,-->
+    <!--    true, true, true]</rosparam>-->
+    <!--</node>-->
+    <!-- Spawn a position controller -->
+    <!--<node name="roll_pitch_yawrate_thrust_controller_node" pkg="rotors_control" type="roll_pitch_yawrate_thrust_controller_node" output="screen" respawn="true">-->
+    <!--  <rosparam command="load" file="$(find rotors_gazebo)/resource/roll_pitch_yawrate_thrust_controller_iris.yaml" />-->
+    <!--  <rosparam command="load" file="$(find x3_control)/resource/iris.yaml" />-->
+    <!--  <remap from="odometry" to="odometry/filtered" />-->
+    <!--</node>-->
+
+    <!--<node name="cmdvel_transform" pkg="subt_example" type="cmdvel_converter_rpy.py" args="cmd_vel command/roll_pitch_yawrate_thrust"/>-->
+
+    <!-- TESTING -->
     <node pkg="robot_localization" type="ukf_localization_node"
           name="robot_localization_ukf_node_odom">
-      <param name="frequency" value="1000." />
+      <param name="frequency" value="100" />
       <param name="sensor_timeout" value="0.2" />
       <param name="two_d_mode" value="false" />
-      <param name="odom_frame" value="$(arg x3_name)/odom" />
+      <param name="odom_frame" value="$(arg world_name)" />
       <param name="base_link_frame" value="$(arg x3_name)" />
-      <param name="base_link_frame_output" value="$(arg x3_name)" />
-      <param name="world_frame" value="$(arg x3_name)/odom" />
+      <param name="world_frame" value="$(arg world_name)" />
       <param name="publish_tf" value="false" />
       <param name="imu0" value="imu/data" />
       <rosparam param="imu0_config">
-        [false, false, false, true, true, true,
-        true, true, true, true, true, true,
+       [false, false, false,
+        false, false, false,
+        false, false, false,
+        true, true, true,
         true, true, true]</rosparam>
+      <param name="pose0" value="extracted_pose" />
+      <rosparam param="pose0_config">
+       [true, true, true,
+        true, true, true,
+        false, false, false,
+        false, false, false,
+        false, false, false]</rosparam>
     </node>
-    <!-- Spawn a position controller -->
-    <node name="roll_pitch_yawrate_thrust_controller_node" pkg="rotors_control" type="roll_pitch_yawrate_thrust_controller_node" output="screen" respawn="true">
-      <rosparam command="load" file="$(find rotors_gazebo)/resource/roll_pitch_yawrate_thrust_controller_iris.yaml" />
+    <node name="lee_position_controller_node" pkg="rotors_control" type="lee_position_controller_node" output="screen" respawn="true">
+      <rosparam command="load" file="$(find rotors_gazebo)/resource/lee_controller_iris.yaml" />
       <rosparam command="load" file="$(find x3_control)/resource/iris.yaml" />
       <remap from="odometry" to="odometry/filtered" />
     </node>
 
-    <node name="cmdvel_transform" pkg="subt_example" type="cmdvel_converter_rpy.py" args="cmd_vel command/roll_pitch_yawrate_thrust"/>
+    <node name="cmdvel_transform_pose" pkg="subt_example" type="cmdvel_converter.py" args="odometry/filtered cmd_vel command/pose"/>
+
+    <node name="transforms2pose" pkg="subt_example" type="transforms2pose.py" respawn="true">
+      <remap from="input_topic" to="pose"/>
+      <remap from="output_topic" to="extracted_pose"/>
+      <param name="parent_frame_id" value="$(arg world_name)"/>
+      <param name="child_frame_id" value="$(arg x3_name)"/>
+    </node>
 
   </group>
 </launch>

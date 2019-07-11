@@ -57,7 +57,9 @@ install(DIRECTORY config/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
 
 # Install a python script
-catkin_install_python(PROGRAMS scripts/teleop_twist_keyboard.py scripts/cmdvel_converter_rpy.py
+catkin_install_python(PROGRAMS scripts/teleop_twist_keyboard.py
+  scripts/cmdvel_converter_rpy.py scripts/cmdvel_converter.py
+  scripts/transforms2pose.py
 DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 # Mark executables and/or libraries for installation
