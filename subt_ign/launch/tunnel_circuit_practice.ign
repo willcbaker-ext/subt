@@ -3,11 +3,21 @@
             [worldName:=<worldName>
              robotName1:=<robotName> robotConfig1:=<robotConfig>
              robotName2:=<robotName> robotConfig2:=<robotConfig>
-             ... ]
+             ... ] [uavControllers:=true]
 
-    The [worldName] command line argument is optional,
-          defaults to tunnel_circuit_practice_01 if not specified
-    The [robotNameX] command line argument is optional, where X can be 1 to 20
+    Command line arguments:
+
+    worldName: This is an optional argument specifying the name of the world to simulate.
+                It defaults to tunnel_circuit_practice_01 if not specified
+    robotNameX: This an optional argument specifying the name of the robot to
+                spawn. X can be 1 to 20.
+    robotConfigX: This an optional argument specifying the configuration of the
+                  robot named robotNameX.
+    uavControllers: This an optional argument. Setting this to true launches
+                    x3_control.launch and x4_control.launch for X3 and X4 type
+                    UAVs respectively. Teams can set this to false in order to
+                    use their own controllers. The default value is true
+
 
     Example that loads tunnel circuit practice world with an X2 robot with configuration 3
 
@@ -38,6 +48,11 @@
         robots[name] = config
       end
     end
+  end
+
+  launchUavControllers = true
+  if local_variables.include?(:"uavControllers")
+    launchUavControllers = uavControllers.downcase == "true"
   end
 %>
 
@@ -467,7 +482,7 @@
     "</executable>\n"
   end
 
-  def spawnX3(_name, _config, _x, _y)
+  def spawnX3(_name, _config, _x, _y, _launchController)
     laserScan=0
     stereoCam=0
     rgbdCam=0
@@ -477,6 +492,16 @@
     if _config == "5"
       stereoCam=1
     end
+
+    controllerLaunchCmd = ""
+    if _launchController
+      controllerLaunchCmd =
+    "<executable name='X3_controller'>\n"\
+    "  <command>roslaunch --wait x3_control control.launch world_name:=#{$worldName} x3_name:=#{_name}</command>\n"\
+    "</executable>\n"\
+    end
+
+    # Return string
     "<plugin name=\"ignition::launch::GazeboFactory\"\n"\
     "        filename=\"libignition-launch-gazebo-factory.so\">\n"\
     "  <name>#{_name}</name>\n"\
@@ -593,15 +618,13 @@
     "<executable name='x3_description'>\n"\
     "  <command>roslaunch --wait subt_ros x3_description.launch world_name:=#{$worldName} name:=#{_name}</command>\n"\
     "</executable>\n"\
-    "<executable name='X3_controller'>\n"\
-    "  <command>roslaunch --wait x3_control control.launch world_name:=#{$worldName} x3_name:=#{_name}</command>\n"\
-    "</executable>\n"\
+    "#{controllerLaunchCmd}\n"\
     "<executable name='x3_ros_ign_bridge'>\n"\
       "  <command>roslaunch --wait subt_ros vehicle_topics.launch world_name:=#{$worldName} name:=#{_name} laser_scan:=#{laserScan} stereo_cam:=#{stereoCam} rgbd_cam:=#{rgbdCam}</command>\n"\
     "</executable>\n"
   end
 
-  def spawnX4(_name, _config, _x, _y)
+  def spawnX4(_name, _config, _x, _y, _launchController)
     laserScan=0
     stereoCam=0
     rgbdCam=0
@@ -614,6 +637,16 @@
     if _config == "5"
       stereoCam=1
     end
+
+    controllerLaunchCmd = ""
+    if _launchController
+      controllerLaunchCmd =
+    "<executable name='X4_controller'>\n"\
+    "  <command>roslaunch --wait x4_control control.launch world_name:=#{$worldName} x4_name:=#{_name}</command>\n"\
+    "</executable>\n"
+    end
+
+    # Return string
     "<plugin name=\"ignition::launch::GazeboFactory\"\n"\
     "        filename=\"libignition-launch-gazebo-factory.so\">\n"\
     "  <name>#{_name}</name>\n"\
@@ -765,9 +798,7 @@
     "    </include>\n"\
     "  </sdf>\n"\
     "</plugin>\n"\
-    "<executable name='X4_controller'>\n"\
-    "  <command>roslaunch --wait x4_control control.launch world_name:=#{$worldName} x4_name:=#{_name}</command>\n"\
-    "</executable>\n"\
+    "#{controllerLaunchCmd}\n"\
     "<executable name='x4_description'>\n"\
     "  <command>roslaunch --wait subt_ros x4_description.launch world_name:=#{$worldName} name:=#{_name}</command>\n"\
     "</executable>\n"\
@@ -797,12 +828,12 @@
     elsif robotType == "3"
       robotSpawned += 1
 %>
-<%=   spawnX3(name, robotConfigN, posX, posY) %>
+<%=   spawnX3(name, robotConfigN, posX, posY, launchUavControllers) %>
 <%
     elsif robotType == "4"
       robotSpawned += 1
 %>
-<%=   spawnX4(name, robotConfigN, posX, posY) %>
+<%=   spawnX4(name, robotConfigN, posX, posY, launchUavControllers) %>
 <%
     else
       puts "Unknown robot configuration #{config}"
