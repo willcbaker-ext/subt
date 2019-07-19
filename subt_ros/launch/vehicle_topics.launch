@@ -2,6 +2,8 @@
 <launch>
   <arg name="world_name"/>
   <arg name="name"/>
+  <arg name="robot_type"/>
+  <arg name="isUGV" value="$(eval robot_type in ['X1', 'X2'])"/>
   <arg name="link_name" value="base_link"/>
   <arg name="sensor_prefix" value="/world/$(arg world_name)/model/$(arg name)/link/$(arg link_name)/sensor"/>
   <arg name="stereo_cam" default="0"/>
@@ -24,27 +26,31 @@
       args="/model/$(arg name)/pose@geometry_msgs/TransformStamped@ignition.msgs.Pose">
       <remap from="/model/$(arg name)/pose" to="pose"/>
     </node>
-    <node
-      pkg="ros1_ign_bridge"
-      type="parameter_bridge"
-      name="ros1_ign_bridge_odom"
-      args="/model/$(arg name)/odometry@nav_msgs/Odometry@ignition.msgs.Odometry">
-      <remap from="/model/$(arg name)/odometry" to="odom"/>
-    </node>
-    <node
-      pkg="ros1_ign_bridge"
-      type="parameter_bridge"
-      name="ros1_ign_bridge_actuators"
-      args="/model/$(arg name)/command/motor_speed@mav_msgs/Actuators@ignition.msgs.Actuators">
-      <remap from="/model/$(arg name)/command/motor_speed" to="command/motor_speed"/>
-    </node>
-    <node
-      pkg="ros1_ign_bridge"
-      type="parameter_bridge"
-      name="ros1_ign_bridge_twist"
-      args="/model/$(arg name)/cmd_vel_relay@geometry_msgs/Twist@ignition.msgs.Twist">
-      <remap from="/model/$(arg name)/cmd_vel_relay" to="cmd_vel"/>
-    </node>
+    <group if="$(arg isUGV)">
+      <node
+        pkg="ros1_ign_bridge"
+        type="parameter_bridge"
+        name="ros1_ign_bridge_odom"
+        args="/model/$(arg name)/odometry@nav_msgs/Odometry@ignition.msgs.Odometry">
+        <remap from="/model/$(arg name)/odometry" to="odom"/>
+      </node>
+      <node
+        pkg="ros1_ign_bridge"
+        type="parameter_bridge"
+        name="ros1_ign_bridge_twist"
+        args="/model/$(arg name)/cmd_vel_relay@geometry_msgs/Twist@ignition.msgs.Twist">
+        <remap from="/model/$(arg name)/cmd_vel_relay" to="cmd_vel"/>
+      </node>
+    </group>
+    <group unless="$(arg isUGV)">
+      <node
+        pkg="ros1_ign_bridge"
+        type="parameter_bridge"
+        name="ros1_ign_bridge_actuators"
+        args="/model/$(arg name)/command/motor_speed@mav_msgs/Actuators@ignition.msgs.Actuators">
+        <remap from="/model/$(arg name)/command/motor_speed" to="command/motor_speed"/>
+      </node>
+    </group>
     <group if="$(arg rgbd_cam)">
     <node
       pkg="ros1_ign_bridge"

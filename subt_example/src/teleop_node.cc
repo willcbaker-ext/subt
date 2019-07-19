@@ -188,11 +188,14 @@ SubtTeleop::SubtTeleop():
 
   for (auto robotName : this->robotNames)
   {
+    std::string cmdTopic = "/cmd_vel";
+    if (robotName == "X3" || robotName == "X4")
+      cmdTopic = "/cmd_force";
     // Create a publisher object to generate a velocity command, and associate
     // it to the corresponding robot's name.
     this->velPubMap[robotName]
       = this->nh.advertise<geometry_msgs::Twist>(
-        robotName + "/cmd_vel", 1, true);
+        robotName + cmdTopic, 1, true);
 
     // Create a publisher object to generate a selection command, and associate
     // it to the corresponding robot's name.

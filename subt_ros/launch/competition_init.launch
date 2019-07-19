@@ -20,18 +20,22 @@
     <include file="$(find subt_ros)/launch/vehicle_topics.launch">
       <arg name="world_name" value="$(arg world_name)"/>
       <arg name="name" value="X1"/>
+      <arg name="robot_type" value="X1"/>
     </include>
     <include file="$(find subt_ros)/launch/vehicle_topics.launch">
       <arg name="world_name" value="$(arg world_name)"/>
       <arg name="name" value="X2"/>
+      <arg name="robot_type" value="X2"/>
     </include>
     <include file="$(find subt_ros)/launch/vehicle_topics.launch">
       <arg name="world_name" value="$(arg world_name)"/>
       <arg name="name" value="X3"/>
+      <arg name="robot_type" value="X3"/>
     </include>
     <include file="$(find subt_ros)/launch/vehicle_topics.launch">
       <arg name="world_name" value="$(arg world_name)"/>
       <arg name="name" value="X4"/>
+      <arg name="robot_type" value="X4"/>
     </include>
   </group>
 
