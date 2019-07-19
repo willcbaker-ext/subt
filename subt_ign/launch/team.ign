@@ -1,53 +1,12 @@
 <?xml version="1.0"?>
 <%
-  # This example launch file can be populated by a subt participant with
+  # This example launch file can be populated by a subt participant with 
   # their solution.
-  #
-  # Usage: ign launch team.ign
-  #            [robotName1:=<robotName> robotConfig1:=<robotConfig>
-  #             robotName2:=<robotName> robotConfig2:=<robotConfig>
-  #             ... ]
-  #
-  # The [robotNameX] command line argument is optional, where X can be 1 to 20. 
-  # If not provided, controllers for corresponding vehicles will not be started.
-  # [robotNameX] must match the names of the robots already spawned.
-  #
+
   # Spawning of the robots is performed by the simulation sever. A team launch
-  # file should only run control code.
-  #
-
-  def extractRobotType(config)
-    return config[/X[1-4]/]
-  end
-
-  maxRobotCount = 20
-  robots = Hash.new
-  for i in 1..maxRobotCount do
-    if (local_variables.include?(:"robotName#{i}") &&
-        local_variables.include?(:"robotConfig#{i}"))
-      name=eval "robotName#{i}"
-      config=eval "robotConfig#{i}"
-      if name != nil && !name.empty?
-        robots[name] = config
-      end
-    end
-  end
+  # file should only run control code. 
 %>
 <ignition version='1.0'>
-
-  <% robots.each do |robotName, robotConfig|
-    robotType = extractRobotType(robotConfig)
-    # only X3 and X4 need controllers to be launched
-    if ['X3', 'X4'].include?(robotType)
-      puts "Starting controller for #{robotName} (#{robotType})"
-  %>
-  <executable name='<%= robotName %>_controller'>
-    <command>roslaunch <%= robotType.downcase%>_control control.launch <%= robotType.downcase%>_name:=<%= robotName %></command>
-  </executable>
-  <% 
-    end
-  end
-  %>
 
   <!-- Simple example that runs a teleop node -->
   <executable name='teleop'>
