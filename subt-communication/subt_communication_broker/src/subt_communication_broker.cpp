@@ -156,7 +156,8 @@ void Broker::DispatchMessages()
              t.second->rf_state.pose,
              t.second->rf_state.update_stamp) = pose_update_f(t.second->name);
 
-    if(!ret) {
+    if (!ret)
+    {
       std::cerr << "Problem getting state for " << t.second->name
                 << ", skipping DispatchMessages()" << std::endl;
       return;
@@ -186,8 +187,10 @@ void Broker::DispatchMessages()
     {
       std::vector<BrokerClientInfo> clientsV = this->endpoints.at(dstEndPoint);
 
-      if(clientsV.empty()) {
-        std::cerr << "[Broker::DispatchMessages()]: No clients for endpoint " << dstEndPoint << std::endl;
+      if(clientsV.empty())
+      {
+        std::cerr << "[Broker::DispatchMessages()]: No clients for endpoint "
+          << dstEndPoint << std::endl;
       }
 
       for (const BrokerClientInfo &client : clientsV)
@@ -202,8 +205,10 @@ void Broker::DispatchMessages()
 
         // Query communication_model if this packet is successful,
         // forward if so
-        if(!tx_node->second->radio.pathloss_f) {
-          std::cerr << "No pathloss function defined for " << msg.src_address() << std::endl;
+        if(!tx_node->second->radio.pathloss_f)
+        {
+          std::cerr << "No pathloss function defined for "
+                    << msg.src_address() << std::endl;
           continue;
         }
 
@@ -214,8 +219,8 @@ void Broker::DispatchMessages()
                                                              rx_node->second->rf_state,
                                                              msg.data().size());
 
-        if(send_packet) {
-
+        if (send_packet)
+        {
           msg.set_rssi(rssi);
 
           if (!this->node.Request(client.address, msg))
@@ -225,11 +230,12 @@ void Broker::DispatchMessages()
                       << std::endl;
           }
         }
-
       }
     }
-    else {
-      std::cerr << "[Broker::DispatchMessages()]: Could not find endpoint " << dstEndPoint << std::endl;
+    else
+    {
+      std::cerr << "[Broker::DispatchMessages()]: Could not find endpoint "
+        << dstEndPoint << std::endl;
     }
   }
 }
@@ -258,9 +264,6 @@ bool Broker::Bind(const std::string &_clientAddress,
   clientInfo.address = _clientAddress;
   this->endpoints[_endpoint].push_back(clientInfo);
 
-  std::cout << "New endpoint registered [" << _endpoint << "] for client ["
-            << _clientAddress << "]" << std::endl;
-
   return true;
 }
 
@@ -284,8 +287,6 @@ bool Broker::Register(const std::string &_id)
 
     newMember->radio = default_radio_configuration;
     (*this->team)[_id] = newMember;
-
-    std::cout << "New client registered [" << _id << "]" <<  std::endl;
   }
 
   return true;
@@ -395,8 +396,10 @@ void Broker::SetRadioConfiguration(const std::string& address,
     lk.lock();
 
     node = this->team->find(address);
-    if(node == this->team->end()) {
-      std::cerr << "Cannot set radio configuration for " << address << std::endl;
+    if(node == this->team->end())
+    {
+      std::cerr << "Cannot set radio configuration for "
+        << address << std::endl;
       return;
     }
   }

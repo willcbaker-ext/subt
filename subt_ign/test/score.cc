@@ -36,13 +36,14 @@ class ScoreTest : public testing::Test, public subt::GazeboTest
   /// \brief Constructor.
   public: ScoreTest()
   {
-    std::this_thread::sleep_for(std::chrono::seconds(30));
+    // Wait for models to spawn.
+    std::this_thread::sleep_for(std::chrono::seconds(15));
 
     // Wait until Gazebo is ready.
     using namespace std::chrono_literals;
     EXPECT_TRUE(this->WaitForGazebo(120s));
 
-    this->client.reset(new subt::CommsClient("X2"));
+    this->client.reset(new subt::CommsClient("X2", false, true));
     this->client->Bind(&ScoreTest::OnArtifactAck, this);
   }
 
@@ -114,17 +115,23 @@ class ScoreTest : public testing::Test, public subt::GazeboTest
 
     ignition::math::Pose3d robotPose(4, 3, 0.131, 0, 0, 0);
 
-    // Report an artifact with high accuracy (extinguisher_1): +1 point.
-    ignition::math::Pose3d artifact1Pose(158.0, 140.0, -15.0, 0, 0, 0);
+    // The test positions are associated with artifacts in
+    /// the tunnel_qual_ign.sdf world
+
+    // Report an artifact with high accuracy (phone_2): +1 point.
+    ignition::math::Pose3d artifact1Pose(201.8, 20.0, -15.0, 0, 0, 0);
     double err = 0.0;
     ignition::msgs::Pose pose;
     pose.mutable_position()->set_x(
-      artifact1Pose.Pos().X() - robotPose.Pos().X() + rep.position().x() + err);
+      artifact1Pose.Pos().X() -
+      (robotPose.Pos().X() + rep.position().x()) + err);
     pose.mutable_position()->set_y(
-      artifact1Pose.Pos().Y() - robotPose.Pos().Y() + rep.position().y());
+      artifact1Pose.Pos().Y() - (robotPose.Pos().Y() + rep.position().y()));
     pose.mutable_position()->set_z(
-      artifact1Pose.Pos().Z() - robotPose.Pos().Z() + rep.position().z());
-    uint32_t type = static_cast<uint32_t>(subt::ArtifactType::TYPE_BACKPACK);
+      artifact1Pose.Pos().Z() - (robotPose.Pos().Z() + rep.position().z()));
+    uint32_t type = static_cast<uint32_t>(
+        subt::ArtifactType::TYPE_PHONE);
+
     this->ReportArtifact(type, pose);
     ASSERT_TRUE(this->WaitUntilScoreIs(1));
 
@@ -142,15 +149,16 @@ class ScoreTest : public testing::Test, public subt::GazeboTest
       this->scoreAcks.pop();
     }
 
-    // Report an artifact with medium accuracy (x2): +1 point.
-    ignition::math::Pose3d artifact2Pose(103.841, 26.259, 0.751, -1.671, 0, 0);
+    // Report an artifact with medium accuracy (phone_1): +1 point.
+    ignition::math::Pose3d artifact2Pose(260, 160, -15, 0, 0, 0);
     err = 1.0;
     pose.mutable_position()->set_x(
-      artifact2Pose.Pos().X() - robotPose.Pos().X() + rep.position().x() + err);
+      artifact2Pose.Pos().X() -
+      (robotPose.Pos().X() + rep.position().x()) + err);
     pose.mutable_position()->set_y(
-      artifact2Pose.Pos().Y() - robotPose.Pos().Y() + rep.position().y());
+      artifact2Pose.Pos().Y() - (robotPose.Pos().Y() + rep.position().y()));
     pose.mutable_position()->set_z(
-      artifact2Pose.Pos().Z() - robotPose.Pos().Z() + rep.position().z());
+      artifact2Pose.Pos().Z() - (robotPose.Pos().Z() + rep.position().z()));
     type = static_cast<uint32_t>(subt::ArtifactType::TYPE_PHONE);
     this->ReportArtifact(type, pose);
     ASSERT_TRUE(this->WaitUntilScoreIs(2));
@@ -169,15 +177,16 @@ class ScoreTest : public testing::Test, public subt::GazeboTest
       this->scoreAcks.pop();
     }
 
-    // Report an artifact with low accuracy (x1): +1 point.
-    ignition::math::Pose3d artifact3Pose(88.490, 133.324, 0.719, 0, 0, 3.1415);
+    // Report an artifact with low accuracy (extinguisher_1): +1 point.
+    ignition::math::Pose3d artifact3Pose(158.0, 140.0, -15.0, 0, 0, 0);
     err = 4.99;
     pose.mutable_position()->set_x(
-      artifact3Pose.Pos().X() - robotPose.Pos().X() + rep.position().x() + err);
+      artifact3Pose.Pos().X() -
+      (robotPose.Pos().X() + rep.position().x()) + err);
     pose.mutable_position()->set_y(
-      artifact3Pose.Pos().Y() - robotPose.Pos().Y() + rep.position().y());
+      artifact3Pose.Pos().Y() - (robotPose.Pos().Y() + rep.position().y()));
     pose.mutable_position()->set_z(
-      artifact3Pose.Pos().Z() - robotPose.Pos().Z() + rep.position().z());
+      artifact3Pose.Pos().Z() - (robotPose.Pos().Z() + rep.position().z()));
     type = static_cast<uint32_t>(subt::ArtifactType::TYPE_EXTINGUISHER);
     this->ReportArtifact(type, pose);
     ASSERT_TRUE(this->WaitUntilScoreIs(3));
@@ -363,7 +372,7 @@ TEST_F(ScoreTest, TestScoring)
 int main(int argc, char **argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "score_test");
+  ros::init(argc, argv, "test_score");
 
   return RUN_ALL_TESTS();
 }
