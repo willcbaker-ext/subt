@@ -22,6 +22,7 @@
 #include <chrono>
 #include <map>
 #include <mutex>
+#include <set>
 #include <utility>
 
 #include <ignition/gazebo/components/Model.hh>
@@ -30,6 +31,7 @@
 #include <ignition/gazebo/components/GpuLidar.hh>
 #include <ignition/gazebo/components/RgbdCamera.hh>
 #include <ignition/gazebo/components/ParentEntity.hh>
+#include <ignition/gazebo/components/Performer.hh>
 #include <ignition/gazebo/components/Pose.hh>
 #include <ignition/gazebo/components/Static.hh>
 #include <ignition/gazebo/components/World.hh>
@@ -177,10 +179,12 @@ class subt::GameLogicPluginPrivate
   /// The key is the object type. See ArtifactType for all supported values.
   /// The value is another map, where the key is the model name and the value
   /// is a Model pointer.
-  public: std::map<subt::ArtifactType,
-                    std::map<std::string, ignition::math::Pose3d>> artifacts;
 
-  public: std::map<std::string, ignition::math::Pose3d> poses;
+  public: using PoseMap = std::map<std::string, ignition::math::Pose3d>;
+  public: std::map<subt::ArtifactType, PoseMap> artifacts;
+  public: std::set<std::string> artifactNames;
+  public: std::set<std::string> artifactsFound;
+  public: PoseMap poses;
 
   /// \brief Counter to track unique identifiers.
   public: uint32_t reportCount = 1u;
@@ -322,18 +326,16 @@ void GameLogicPlugin::PostUpdate(
   this->dataPtr->simTime.set_sec(s);
   this->dataPtr->simTime.set_nsec(ns);
 
-  // Update pose information
-  _ecm.Each<gazebo::components::Model,
-            gazebo::components::Name,
-            gazebo::components::Pose,
-            gazebo::components::Static>(
+  if (this->dataPtr->artifactsFound.size() != this->dataPtr->artifactNames.size())
+  {
+    _ecm.EachNew<gazebo::components::Model,
+                 gazebo::components::Name,
+                 gazebo::components::Pose>(
       [&](const gazebo::Entity &,
           const gazebo::components::Model *,
           const gazebo::components::Name *_nameComp,
-          const gazebo::components::Pose *_poseComp,
-          const gazebo::components::Static *) -> bool
+          const gazebo::components::Pose *_poseComp) -> bool
       {
-        this->dataPtr->poses[_nameComp->Data()] = _poseComp->Data();
         for (std::pair<const subt::ArtifactType,
             std::map<std::string, ignition::math::Pose3d>> &artifactPair :
             this->dataPtr->artifacts)
@@ -341,13 +343,29 @@ void GameLogicPlugin::PostUpdate(
           for (std::pair<const std::string, ignition::math::Pose3d> &artifact :
               artifactPair.second)
           {
-            if (artifact.first == _nameComp->Data())
+            if (!this->dataPtr->artifactsFound.count(artifact.first))
             {
-              artifact.second = _poseComp->Data();
-              break;
+              if (artifact.first == _nameComp->Data())
+              {
+                artifact.second = _poseComp->Data();
+                this->dataPtr->artifactsFound.insert(artifact.first);
+                break;
+              }
             }
           }
         }
+        return true;
+      });
+  }
+
+  _ecm.Each<components::Performer, components::ParentEntity>(
+      [&](const Entity &,
+          const components::Performer *,
+          const components::ParentEntity *_parent) -> bool
+      {
+        auto name = _ecm.Component<components::Name>(_parent->Data());
+        auto pose = _ecm.Component<components::Pose>(_parent->Data());
+        this->dataPtr->poses[name->Data()] = pose->Data();
         return true;
       });
 
@@ -356,6 +374,13 @@ void GameLogicPlugin::PostUpdate(
   {
     static bool errorSent = false;
 
+    auto originEntity = _ecm.EntityByComponents(components::Name(subt::kArtifactOriginName));
+    igndbg << "Found origin Entity: " << originEntity << std::endl;
+    auto originPose = _ecm.Component<components::Pose>(originEntity);
+    igndbg << "Found origin Pose: " << originPose->Data() << std::endl;
+    this->dataPtr->poses[subt::kArtifactOriginName] = originPose->Data();
+
+    bool sendingError = false;
     // Get the artifact origin's pose.
     std::map<std::string, ignition::math::Pose3d>::iterator originIter =
       this->dataPtr->poses.find(subt::kArtifactOriginName);
@@ -364,11 +389,32 @@ void GameLogicPlugin::PostUpdate(
       ignerr << "[GameLogicPlugin]: Unable to find the artifact origin ["
         << subt::kArtifactOriginName
         << "]. Ignoring PoseFromArtifact request" << std::endl;
-      errorSent = true;
+      sendingError = true;
     }
     else
     {
       this->dataPtr->artifactOriginPose = originIter->second;
+    }
+
+    auto baseStationEntity = _ecm.EntityByComponents(components::Name(subt::kBaseStationName));
+    igndbg << "Found bs Entity: " << baseStationEntity << std::endl;
+    auto baseStationPose = _ecm.Component<components::Pose>(baseStationEntity);
+    igndbg << "Found bs Pose: " << baseStationPose->Data() << std::endl;
+    this->dataPtr->poses[subt::kBaseStationName] = baseStationPose->Data();
+
+    // Get the base station's pose.
+    std::map<std::string, ignition::math::Pose3d>::iterator baseStationIter =
+      this->dataPtr->poses.find(subt::kBaseStationName);
+    if (baseStationIter == this->dataPtr->poses.end() && !errorSent)
+    {
+      ignerr << "[GameLogicPlugin]: Unable to find the base station ["
+        << subt::kBaseStationName
+        << "]. Ignoring PoseFromArtifact request" << std::endl;
+      sendingError = true;
+    }
+
+    if (sendingError) {
+      errorSent = sendingError;
     }
   }
 }
@@ -598,6 +644,7 @@ void GameLogicPluginPrivate::ParseArtifacts(
       << modelTypeStr << "] typeid[" << static_cast<int>(modelType) << "]\n";
     this->artifacts[modelType][modelName] = ignition::math::Pose3d::Zero;
         artifactElem = artifactElem->GetNextElement("artifact");
+    this->artifactNames.insert(modelName);
   }
 }
 
