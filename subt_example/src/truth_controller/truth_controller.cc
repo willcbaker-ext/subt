@@ -30,9 +30,13 @@
 #include <sdf/Root.hh>
 #include <sdf/Error.hh>
 
+#include <map>
+#include <memory>
 #include <string>
 
 using namespace ignition;
+
+using ArtifactMap = std::map<std::string, sdf::Model const*>;
 
 class SubtTruthController
 {
@@ -45,12 +49,14 @@ class SubtTruthController
   private: std::string sdfFilename;
 
   private: std::unique_ptr<subt_example::Graph> graph;
+  private: ArtifactMap artifacts;
 };
 
 /////////////////////////////////////////////////
-void PopulateFromSdf(const std::string &_sdfFilename, subt_example::Graph *_g)
+void PopulateFromSdf(const std::string &_sdfFilename,
+                     subt_example::Graph *_g,
+                     ArtifactMap &_artifacts)
 {
-
   auto fetch = [](const std::string &_uri) {
     fuel_tools::ClientConfig config;
     auto fuelClient = std::make_unique<fuel_tools::FuelClient>(config);
@@ -72,6 +78,16 @@ void PopulateFromSdf(const std::string &_sdfFilename, subt_example::Graph *_g)
   {
     auto model = sdfWorld->ModelByIndex(modelIndex);
     auto modelName = model->Name();
+
+    if(modelName.find("extinguisher") != std::string::npos ||
+       modelName.find("rescue_randy") != std::string::npos ||
+       modelName.find("drill") != std::string::npos ||
+       modelName.find("phone") != std::string::npos ||
+       modelName.find("backpack") != std::string::npos)
+    {
+      _artifacts[modelName] = model;
+      continue;
+    }
 
     for (const auto & vertex: vertices)
     {
@@ -102,8 +118,9 @@ SubtTruthController::SubtTruthController()
   this->graph = std::make_unique<subt_example::Graph>();
   subt_example::ParseGraph(this->dotFilename, this->graph.get());
 
-  PopulateFromSdf(this->sdfFilename, this->graph.get());
+  PopulateFromSdf(this->sdfFilename, this->graph.get(), this->artifacts);
 
+  std::cout << "Tiles: " << std::endl;
   auto vertices = this->graph->Vertices();
   for (const auto & vertex: vertices)
   {
@@ -111,17 +128,23 @@ SubtTruthController::SubtTruthController()
 
     if  (v.Data().tileModel == nullptr)
     {
-      std::cout << v.Id() << " "
+      std::cout << "  " << v.Id() << " "
                 << v.Data().tileName << " "
                 << v.Data().tileType << std::endl;
     }
     else
     {
-      std::cout << v.Id() << " "
+      std::cout << "  " << v.Id() << " "
                 << v.Data().tileName << " "
                 << v.Data().tileType << " "
                 << v.Data().tileModel->Pose() << std::endl;
     }
+  }
+
+  std::cout << "Artifacts: " << std::endl;
+  for (const auto & artifact : artifacts)
+  {
+    std::cout << "  " << artifact.first << " " << artifact.second->Pose() << std::endl;
   }
 }
 
