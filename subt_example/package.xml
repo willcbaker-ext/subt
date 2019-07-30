@@ -16,7 +16,10 @@
   <depend>x4_description</depend>
 
   <build_depend>message_generation</build_depend>
+  <build_depend>boost</build_depend>
+
   <exec_depend>message_runtime</exec_depend>
+  <exec_depend>boost</exec_depend>
 
   <export>
   </export>
