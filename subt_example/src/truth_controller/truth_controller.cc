@@ -102,6 +102,55 @@ void PopulateFromSdf(const std::string &_sdfFilename,
   }
 }
 
+void FindTileMembership(const subt_example::Graph *_g,
+                        const ArtifactMap &_artifacts,
+                        std::map<std::string, std::string> &_membership)
+{
+  // This is really naive.  It computes the closest tile origin to the
+  // artifact origin.  Could probably be improved by using bounding boxes.
+  std::map<std::string, double> closestTileDist;
+  std::map<std::string, std::string> closestTileName;
+
+  for (const auto & artifact : _artifacts)
+  {
+    closestTileDist[artifact.first] = 1e9;
+    closestTileName[artifact.first] = "";
+  }
+
+  auto vertices = _g->Vertices();
+  for (const auto & vertex: vertices)
+  {
+    const auto v = vertex.second.get();
+
+    if (!v.Data().tileModel)
+      continue;
+
+    auto tile_pos = v.Data().tileModel->Pose().Pos();
+
+    for (const auto & artifact : _artifacts)
+    {
+      auto art_pos = artifact.second->Pose().Pos();
+
+      auto dist = tile_pos.Distance(art_pos);
+
+      if (dist < closestTileDist[artifact.first])
+      {
+        closestTileDist[artifact.first] = dist;
+        closestTileName[artifact.first] = v.Data().tileName;
+      }
+    }
+  }
+
+  for (const auto& artifact : _artifacts)
+  {
+    std::cout << artifact.first << " "
+              << closestTileName[artifact.first] << " "
+              << closestTileDist[artifact.first] << std::endl;
+  }
+
+  _membership = closestTileName;
+}
+
 /////////////////////////////////////////////////
 SubtTruthController::SubtTruthController()
 {
@@ -146,6 +195,10 @@ SubtTruthController::SubtTruthController()
   {
     std::cout << "  " << artifact.first << " " << artifact.second->Pose() << std::endl;
   }
+
+  std::map<std::string, std::string> membership;
+
+  FindTileMembership(this->graph.get(), this->artifacts, membership);
 }
 
 /////////////////////////////////////////////////
