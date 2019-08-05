@@ -171,10 +171,12 @@ SubtRosRelay::SubtRosRelay()
       subt::communication_broker::kAddrUnregistrationSrv,
       &SubtRosRelay::OnUnregister, this);
 
-  this->node.Subscribe("/subt/score", &SubtRosRelay::OnScore, this);
-
-  this->rosScorePub =
-    this->rosnode->advertise<std_msgs::Int32>("score", 1000);
+  // Disable relay of score information. This will prevent a team from
+  // seeing the score information. If you are doing local development, then
+  // you can still subscribe to the Igition "/subt/score" topic.
+  // this->node.Subscribe("/subt/score", &SubtRosRelay::OnScore, this);
+  // this->rosScorePub =
+  //  this->rosnode->advertise<std_msgs::Int32>("score", 1000);
 }
 
 //////////////////////////////////////////////////
